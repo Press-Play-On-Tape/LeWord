@@ -1,5 +1,8 @@
 #pragma once
 
+#define USE_BRINE
+/* TEASE PRUNE DRONE CRIME BLINK and BRIEF or BRINE */
+
 namespace Constants {
 
     constexpr uint8_t guess_Left = 30;
@@ -11,44 +14,8 @@ namespace Constants {
         { 26, 25, 23,  2, 21,  1, 13, 12, 27, 255  }
         }; 
 
-//    constexpr int8_t scroll_Limits[] = { 0, 0, 16, 5, -6, -17 };
-    // constexpr int8_t scroll_Limits[] = { 0, 0, 18, 5, -6, -17 };
     constexpr int8_t scroll_Limits[] = { 0, 0, 18, 5, -6, -20 };
 
+    constexpr int8_t shake[] = { 0, 1, 2, 1, 0, -1, -2, -1, 0, 1, 2, 1, 0, -1, -2, -1, };
 
-};
-
-
-    
-enum class Direction : uint8_t {
-    Up,
-    Down,
-    Left,
-    Right
-};
-
-enum class KeyState : uint8_t {
-    Visible,
-    Invisible,
-};
-
-enum class GuessState : uint8_t {
-    Dashed,
-    Incorrect,
-    Correct,
-    WrongPosition,
-    Duplicate,
-};
-
-enum class CheckState : uint8_t {
-    InvalidWord,
-    CorrectWord,
-    RealWord,
-};
-
-enum KeyboardState : uint8_t {
-    Showing,
-    StartShowing,
-    StartHiding,
-    Hiding
 };

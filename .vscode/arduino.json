@@ -2,5 +2,5 @@
     "configuration": "core=arduboy-core,boot=org",
     "board": "arduboy-homemade:avr:arduboy",
     "output": "../build",
-    "sketch": "Wordle.ino"
+    "sketch": "LeWord.ino"
 }
