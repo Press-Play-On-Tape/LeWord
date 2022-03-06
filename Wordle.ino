@@ -33,45 +33,53 @@ void setup() {
 
     resetKeyboard();
 
-    guess_Char[0][0]='A';
-    guess_Char[0][1]='E';
-    guess_Char[0][2]='A';
-    guess_Char[0][3]='S';
-    guess_Char[0][4]='E';
+    // guess_Char[0][0]='A';
+    // guess_Char[0][1]='E';
+    // guess_Char[0][2]='A';
+    // guess_Char[0][3]='S';
+    // guess_Char[0][4]='E';
 
-    guess_Char[1][0]='B';
-    guess_Char[1][1]='E';
-    guess_Char[1][2]='A';
-    guess_Char[1][3]='S';
-    guess_Char[1][4]='E';
+    // guess_Char[1][0]='B';
+    // guess_Char[1][1]='E';
+    // guess_Char[1][2]='A';
+    // guess_Char[1][3]='S';
+    // guess_Char[1][4]='E';
 
-    guess_Char[2][0]='C';
-    guess_Char[2][1]='E';
-    guess_Char[2][2]='A';
-    guess_Char[2][3]='S';
-    guess_Char[2][4]='E';
+    // guess_Char[2][0]='C';
+    // guess_Char[2][1]='E';
+    // guess_Char[2][2]='A';
+    // guess_Char[2][3]='S';
+    // guess_Char[2][4]='E';
 
-    guess_Char[3][0]='D';
-    guess_Char[3][1]='E';
-    guess_Char[3][2]='A';
-    guess_Char[3][3]='S';
-    guess_Char[3][4]='E';
+    // guess_Char[3][0]='D';
+    // guess_Char[3][1]='E';
+    // guess_Char[3][2]='A';
+    // guess_Char[3][3]='S';
+    // guess_Char[3][4]='E';
 
-    guess_Char[4][0]='E';
-    guess_Char[4][1]='E';
-    guess_Char[4][2]='A';
-    guess_Char[4][3]='S';
-    guess_Char[4][4]='E';
+    // guess_Char[4][0]='E';
+    // guess_Char[4][1]='E';
+    // guess_Char[4][2]='A';
+    // guess_Char[4][3]='S';
+    // guess_Char[4][4]='E';
 
-    guess_CursorY = 5;
-    guess_ListY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+    // guess_CursorY = 5;
+    // guess_ListY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+    // guess_CursorY = 3;
+    // guess_ListY = -((guess_CursorY - 1) * Constants::guess_Spacing);
 
 }
 
 void loop() {
+   
 
     if (!arduboy.nextFrame()) return; 
     arduboy.pollButtons();
+
+Serial.print(guess_ListY);
+Serial.print(" ");
+Serial.println(keyboardY);
+
 
     if (showInvalidWord) {
 
@@ -84,6 +92,30 @@ void loop() {
         if (arduboy.justPressed(LEFT_BUTTON))   moveCursor(Direction::Left);
         if (arduboy.justPressed(RIGHT_BUTTON))  moveCursor(Direction::Right);
 
+        if (arduboy.pressed(UP_BUTTON)) {
+            
+            switch (keyboardState) {
+
+                case KeyboardState::Showing:
+                case KeyboardState::StartHiding:
+                case KeyboardState::StartShowing:
+                    // moveCursor(Direction::Up);
+                    break;
+
+                default:
+
+                    {
+                        int8_t lowerY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+                        if (guess_ListY < 0) {
+                            guess_ListY = guess_ListY + 1;
+                        }
+                    }
+//                    keyboardState = KeyboardState::StartHiding;
+                    break;
+
+            }
+
+        }        
 
         if (arduboy.justPressed(UP_BUTTON)) {
             
@@ -94,12 +126,47 @@ void loop() {
                     break;
 
                 default:
-                    keyboardState = KeyboardState::StartHiding;
+
+                    // {
+                    //     int8_t lowerY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+                    //     if (guess_ListY < 0) {
+                    //         guess_ListY = guess_ListY + 1;
+                    //     }
+                    // }
+//                    keyboardState = KeyboardState::StartHiding;
                     break;
 
             }
 
         }        
+
+        if (arduboy.pressed(DOWN_BUTTON))   {
+            
+            switch (keyboardState) {
+
+                case KeyboardState::Showing:
+                case KeyboardState::StartHiding:
+                case KeyboardState::StartShowing:
+                    // moveCursor(Direction::Down);
+                    break;
+
+                default:
+                    {
+                        int8_t lowerY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+                        // if (guess_ListY > lowerY) {
+                        // if (guess_ListY > -17) {
+                        if (guess_ListY > Constants::scroll_Limits[guess_CursorY]) {
+                            guess_ListY = guess_ListY - 1;
+                        }
+                        else{
+                            keyboardState = KeyboardState::StartShowing;
+                        }
+                    }
+                    break;
+
+            }
+
+        }
 
         if (arduboy.justPressed(DOWN_BUTTON))   {
             
@@ -110,7 +177,7 @@ void loop() {
                     break;
 
                 default:
-                    keyboardState = KeyboardState::StartShowing;
+                    //keyboardState = KeyboardState::StartShowing;
                     break;
 
             }

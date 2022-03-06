@@ -28,7 +28,6 @@ uint16_t alphaMap[] = {
 12380,65535,65535,65535,12397,65535,65535,12411,12412,65535,65535,12436,65535,65535,12438,65535,65535,65535,65535,65535,12469,65535,65535,65535,12474,65535,
 };
 
-
 image_t Keyboard_W_01 = "white/Keyboard_W_01.png"
 image_t Keyboard_W_02 = "white/Keyboard_W_02.png"
 image_t Keyboard_W_03 = "white/Keyboard_W_03.png"
@@ -87,13 +86,10 @@ image_t Keyboard_B_26 = "black/Keyboard_B_26.png"
 image_t Keyboard_B_27 = "black/Keyboard_B_27.png"
 image_t Keyboard_B_28 = "black/Keyboard_B_28.png"
 
+image_t Keyboard_B_Cursor = "black/Keyboard_B_Cursor.png"
+image_t Keyboard_B_Cursor_Half = "black/Keyboard_B_Cursor_Half.png"
+
 image_t InvalidWord = "InvalidWord.png"
-
-
-
-
-
-
 
 
 uint8_t words[] = {

@@ -7,7 +7,7 @@ using uint24_t = __uint24;
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
 constexpr uint16_t FX_DATA_PAGE  = 0xfecc;
-constexpr uint24_t FX_DATA_BYTES = 78600;
+constexpr uint24_t FX_DATA_BYTES = 78688;
 
 constexpr uint24_t alphaMap = 0x000000;
 constexpr uint24_t Keyboard_W_01 = 0x000548;
@@ -66,5 +66,7 @@ constexpr uint24_t Keyboard_B_25 = 0x000A3A;
 constexpr uint24_t Keyboard_B_26 = 0x000A52;
 constexpr uint24_t Keyboard_B_27 = 0x000A6A;
 constexpr uint24_t Keyboard_B_28 = 0x000A86;
-constexpr uint24_t InvalidWord = 0x000AAC;
-constexpr uint24_t words = 0x000E94;
+constexpr uint24_t Keyboard_B_Cursor = 0x000AAC;
+constexpr uint24_t Keyboard_B_Cursor_Half = 0x000AD8;
+constexpr uint24_t InvalidWord = 0x000B04;
+constexpr uint24_t words = 0x000EEC;

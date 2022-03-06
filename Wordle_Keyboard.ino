@@ -17,7 +17,7 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
     constexpr uint8_t key_PosY[] = { 2, 3, 3, 2, 1, 2, 2, 2, 1, 2, 2, 2, 3, 3, 1,  1, 1, 1, 2, 1, 1, 3, 1, 3, 1, 3 }; 
     constexpr uint8_t key_Width = 10;
     constexpr uint8_t key_Height = 11;
-
+FX::drawBitmap(0, 0, Keyboard_B_Cursor, 0, dbmMasked);
     for (uint8_t i = 0; i < 26; i++) {
 
         uint8_t xPos = key_PosX[i] - 1;
@@ -27,7 +27,8 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
         uint8_t y = yPos * (key_Height - 1); 
 
         if (xPos == xCursor && yPos == yCursor && keyboardState == KeyboardState::Showing) {
-            FX::drawBitmap(x + xOffset, y + yOffset, Images::Keyboard_W[i], 0, dbmReverse);
+            FX::drawBitmap(x + xOffset, y + yOffset, Images::Keyboard_B[i], 0, dbmWhite);
+            FX::drawBitmap(x + xOffset, y + yOffset, Keyboard_B_Cursor, 0, dbmMasked);
         }
         else {
 
