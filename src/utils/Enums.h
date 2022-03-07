@@ -11,6 +11,11 @@ enum GameState : uint8_t {
     Stats
 };
     
+enum GameMode : uint8_t {
+	English,
+    French,
+};
+
 enum class Direction : uint8_t {
     Up,
     Down,

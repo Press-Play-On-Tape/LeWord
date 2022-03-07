@@ -159,19 +159,35 @@ CheckState checkWord() {
 
     // Get start of words using char one and two of guess ..
 
-    uint24_t startPos = ((guessWord[0] - 65) * 26) + (guessWord[1] - 65);
-    FX::seekData(alphaMap + (startPos * 2));
-    uint16_t alphaStart = FX::readPendingUInt16();
-    FX::readEnd();
+    switch (gamePlayVars.mode) {
 
+        case GameMode::English:
+            {
+                uint24_t startPos = ((guessWord[0] - 65) * 26) + (guessWord[1] - 65);
+                FX::seekData(English_AlphaMap + (startPos * 2));
+                uint16_t alphaStart = FX::readPendingUInt16();
+                FX::readEnd();
+                FX::seekData(English_Words + (English_AlphaMap * 6));
 
-    // Iterate through words looking for a match ..
-    
-    FX::seekData(words + (alphaStart * 6));
+            }
+            break;
+
+        case GameMode::French:
+            {
+                uint24_t startPos = ((guessWord[0] - 65) * 26) + (guessWord[1] - 65);
+                FX::seekData(French_AlphaMap + (startPos * 2));
+                uint16_t alphaStart = FX::readPendingUInt16();
+                FX::readEnd();
+                FX::seekData(French_Words + (French_AlphaMap * 6));
+
+            }
+            break;
+
+    }
 
     while (true) {
 
-        uint8_t status = FX::readPendingUInt8();
+        FX::readPendingUInt8(); // Status
 
         for (uint8_t i = 0; i < 5; i++) {
             testWord[i] = FX::readPendingUInt8();

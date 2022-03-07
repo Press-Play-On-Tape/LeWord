@@ -24,45 +24,47 @@ class EEPROM_Utils {
  *   it resets the settings ..
  */
 void EEPROM_Utils::initEEPROM(bool forceClear) {
-Serial.println("reset?");
 
     byte c1 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char1));
     byte c2 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2));
 
     uint16_t zero = 0;
-Serial.println("reset?");
 
-    if (forceClear || c1 != 'L' || c2 != 'X') { 
+    if (forceClear || c1 != 'L' || c2 != 'W') { 
 
         eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char1), 'L');
-        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2), 'X');
-        EEPROM.update(Constants::EEPROM_Games_Played, zero);
-        EEPROM.update(Constants::EEPROM_Current_Streak, zero);
-        EEPROM.update(Constants::EEPROM_Max_Streak, zero);
-Serial.println("reset");
+        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2), 'W');
+        EEPROM.put(Constants::EEPROM_Games_Won, zero);
+        EEPROM.put(Constants::EEPROM_Games_Played, zero);
+        EEPROM.put(Constants::EEPROM_Current_Streak, zero);
+        EEPROM.put(Constants::EEPROM_Max_Streak, zero);
+
     }
 
 }
 
 void EEPROM_Utils::increaseCorrectWords() {
 
+    uint16_t gamesWon = 0;
     uint16_t gamesPlayed = 0;
     uint16_t currentStreak = 0;
     uint16_t maxStreak = 0;
 
+    EEPROM.get(Constants::EEPROM_Games_Won, gamesWon);
     EEPROM.get(Constants::EEPROM_Games_Played, gamesPlayed);
     EEPROM.get(Constants::EEPROM_Current_Streak, currentStreak);
     EEPROM.get(Constants::EEPROM_Max_Streak, maxStreak);
 
+    gamesWon++;
     gamesPlayed++;
     currentStreak++;
 
     if (currentStreak > maxStreak) maxStreak = currentStreak;
 
-    EEPROM.update(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.update(Constants::EEPROM_Current_Streak, currentStreak);
-    EEPROM.update(Constants::EEPROM_Max_Streak, maxStreak);
-Serial.println("increaseCorrectWords");
+    EEPROM.put(Constants::EEPROM_Games_Won, gamesWon);
+    EEPROM.put(Constants::EEPROM_Games_Played, gamesPlayed);
+    EEPROM.put(Constants::EEPROM_Current_Streak, currentStreak);
+    EEPROM.put(Constants::EEPROM_Max_Streak, maxStreak);
 
 }
 
@@ -71,8 +73,12 @@ void EEPROM_Utils::resetWiningStreak() {
     uint16_t gamesPlayed = 0;
     uint16_t currentStreak = 0;
 
-    EEPROM.update(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.update(Constants::EEPROM_Current_Streak, currentStreak);
+    EEPROM.get(Constants::EEPROM_Games_Played, gamesPlayed);
+
+    gamesPlayed++;
+
+    EEPROM.put(Constants::EEPROM_Games_Played, gamesPlayed);
+    EEPROM.put(Constants::EEPROM_Current_Streak, currentStreak);
 
 }
 

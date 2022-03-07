@@ -7,7 +7,10 @@
 #include "src/utils/Constants.h"
 #include "src/utils/Enums.h"
 #include "src/utils/EEPROM_Utils.h"
+#include "src/utils/Structs.h"
 
+
+GamePlayVars gamePlayVars;
 KeyState keyboard[26];
 
 char guess_Char[6][5];
