@@ -100,13 +100,31 @@ void game() {
     switch (checkState) {
 
         case CheckState::InvalidWord:
-            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON))  checkState = CheckState::Normal;
+            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+                EEPROM_Utils::resetWiningStreak();
+                checkState = CheckState::Normal;
+            }
             break;
 
         case CheckState::CorrectWord:
+            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+                EEPROM_Utils::increaseCorrectWords();
+                gameState = GameState::Stats_Init;
+            }
+            break;
+
         case CheckState::TooManyAttempts:
+            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+                EEPROM_Utils::resetWiningStreak();
+                gameState = GameState::Stats_Init;
+            }
+            break;
+
         case CheckState::Quit:
-            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON))  gameState = GameState::Title_Init;
+            if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
+                EEPROM_Utils::resetWiningStreak();
+                gameState = GameState::Stats_Init;
+            }
             break;
 
         default:

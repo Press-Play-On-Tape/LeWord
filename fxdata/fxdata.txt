@@ -94,6 +94,7 @@ image_t InvalidWord = "InvalidWord.png"
 image_t TooManyAttempts = "TooManyAttempts.png"
 image_t TitleScreen = "TitleScreen.png"
 image_t Quit = "Quit.png"
+image_t Statistics = "Statistics.png"
 
 uint8_t words[] = {
 1,65,65,82,71,72,

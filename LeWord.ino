@@ -6,7 +6,7 @@
 #include "src/images/Images.h"
 #include "src/utils/Constants.h"
 #include "src/utils/Enums.h"
-
+#include "src/utils/EEPROM_Utils.h"
 
 KeyState keyboard[26];
 
@@ -44,6 +44,8 @@ void setup() {
 
     FX::disableOLED();  
     FX::begin(FX_DATA_PAGE); 
+
+    EEPROM_Utils::initEEPROM(false);
 
 }
 
@@ -86,6 +88,17 @@ void loop() {
         case GameState::Game:
 
             game();
+            break;
+
+        case GameState::Stats_Init:
+
+            statistics_Init();
+            statistics();
+            break;
+
+        case GameState::Stats:
+
+            statistics();
             break;
 
     }

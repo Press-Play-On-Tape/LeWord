@@ -2,5 +2,6 @@
     "configuration": "core=arduboy-core,boot=org",
     "board": "arduboy-homemade:avr:arduboy",
     "output": "../build",
-    "sketch": "LeWord.ino"
+    "sketch": "LeWord.ino",
+    "port": "/dev/tty.usbmodem14101"
 }

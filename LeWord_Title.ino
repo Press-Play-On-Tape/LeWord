@@ -18,6 +18,12 @@ void title() {
 
     }
 
+    if (arduboy.justPressed(B_BUTTON)) {
+        
+        gameState = GameState::Stats_Init; 
+
+    }
+
     FX::drawBitmap(0, 0, TitleScreen, 0, dbmWhite);
 
 }
