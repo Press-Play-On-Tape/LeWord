@@ -7,12 +7,12 @@
 
 void game_Init() {
 
-    checkState = CheckState::Normal;
+    gamePlayVars.checkState = CheckState::Normal;
+    gamePlayVars.cancelButton = 0;
+    gamePlayVars.keyboard.reset();
+    gamePlayVars.guesses.reset();
+
     gameState = GameState::Game;
-    cancelButton = 0;
-    
-    resetKeyboard();
-    resetGuesses();
     
 
     // Pick a random word ..
@@ -29,12 +29,12 @@ void game_Init() {
 
                     uint8_t status = FX::readPendingUInt8();
 
-                    for (uint8_t i = 0; i < 5; i++) {
-                        selectedWord[i] = FX::readPendingUInt8();
-                        Serial.print(selectedWord[i]);
-                        Serial.print(" ");
-                    }
-                        Serial.println("");
+                    // for (uint8_t i = 0; i < 5; i++) {
+                    // gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
+                    // Serial.print(gamePlayVars.selectedWord[i]);
+                    // Serial.print(" ");
+                    // }
+                    // Serial.println("");
 
                     FX::readEnd();
                 }
@@ -48,12 +48,12 @@ void game_Init() {
 
                     uint8_t status = FX::readPendingUInt8();
 
-                    for (uint8_t i = 0; i < 5; i++) {
-                        selectedWord[i] = FX::readPendingUInt8();
-                        Serial.print(selectedWord[i]);
-                        Serial.print(" ");
-                    }
-                        Serial.println("");
+                    // for (uint8_t i = 0; i < 5; i++) {
+                    // gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
+                    // Serial.print(gamePlayVars.selectedWord[i]);
+                    // Serial.print(" ");
+                    // }
+                    // Serial.println("");
 
                     FX::readEnd();
                 }
@@ -63,17 +63,17 @@ void game_Init() {
 
     #endif
 
-//  selectedWord[0] = 'H';
-//  selectedWord[1] = 'O';
-//  selectedWord[2] = 'R';
-//  selectedWord[3] = 'S';
-//  selectedWord[4] = 'E';
+//  gamePlayVars.selectedWord[0] = 'H';
+//  gamePlayVars.selectedWord[1] = 'O';
+//  gamePlayVars.selectedWord[2] = 'R';
+//  gamePlayVars.selectedWord[3] = 'S';
+//  gamePlayVars.selectedWord[4] = 'E';
 
-//  selectedWord[0] = 'T';
-//  selectedWord[1] = 'H';
-//  selectedWord[2] = 'E';
-//  selectedWord[3] = 'M';
-//  selectedWord[4] = 'E';
+//  gamePlayVars.selectedWord[0] = 'T';
+//  gamePlayVars.selectedWord[1] = 'H';
+//  gamePlayVars.selectedWord[2] = 'E';
+//  gamePlayVars.selectedWord[3] = 'M';
+//  gamePlayVars.selectedWord[4] = 'E';
 }
 
 void game() {
@@ -83,46 +83,46 @@ void game() {
 
     if (arduboy.pressed(B_BUTTON)) {
 
-        cancelButton++;
+        gamePlayVars.cancelButton++;
 
-        if (cancelButton == 64) {
-            checkState = CheckState::Quit;
+        if (gamePlayVars.cancelButton == 64) {
+            gamePlayVars.checkState = CheckState::Quit;
         }
 
     }
     else {
 
-        cancelButton = false;
+        gamePlayVars.cancelButton = false;
 
     }
 
 
-    switch (checkState) {
+    switch (gamePlayVars.checkState) {
 
         case CheckState::InvalidWord:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::resetWiningStreak();
-                checkState = CheckState::Normal;
+                EEPROM_Utils::resetWiningStreak(gamePlayVars.mode);
+                gamePlayVars.checkState = CheckState::Normal;
             }
             break;
 
         case CheckState::CorrectWord:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::increaseCorrectWords();
+                EEPROM_Utils::increaseCorrectWords(gamePlayVars.mode);
                 gameState = GameState::Stats_Init;
             }
             break;
 
         case CheckState::TooManyAttempts:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::resetWiningStreak();
+                EEPROM_Utils::resetWiningStreak(gamePlayVars.mode);
                 gameState = GameState::Stats_Init;
             }
             break;
 
         case CheckState::Quit:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::resetWiningStreak();
+                if (gamePlayVars.guesses.yCursor > 0) EEPROM_Utils::resetWiningStreak(gamePlayVars.mode);
                 gameState = GameState::Stats_Init;
             }
             break;
@@ -134,7 +134,7 @@ void game() {
 
             if (arduboy.pressed(UP_BUTTON)) {
                 
-                switch (keyboardState) {
+                switch (gamePlayVars.keyboard.state) {
 
                     case KeyboardState::Showing:
                     case KeyboardState::StartHiding:
@@ -143,8 +143,8 @@ void game() {
 
                     default:
 
-                        if (guess_ListY < 0) {
-                            guess_ListY = guess_ListY + 1;
+                        if (gamePlayVars.guesses.listY < 0) {
+                            gamePlayVars.guesses.listY = gamePlayVars.guesses.listY + 1;
                         }
                         break;
 
@@ -154,7 +154,7 @@ void game() {
 
             if (arduboy.justPressed(UP_BUTTON)) {
                 
-                switch (keyboardState) {
+                switch (gamePlayVars.keyboard.state) {
 
                     case KeyboardState::Showing:
                         moveCursor(Direction::Up);
@@ -169,7 +169,7 @@ void game() {
 
             if (arduboy.pressed(DOWN_BUTTON))   {
                 
-                switch (keyboardState) {
+                switch (gamePlayVars.keyboard.state) {
 
                     case KeyboardState::Showing:
                     case KeyboardState::StartHiding:
@@ -178,11 +178,11 @@ void game() {
 
                     default:
 
-                        if (guess_ListY > Constants::scroll_Limits[guess_CursorY]) {
-                            guess_ListY = guess_ListY - 1;
+                        if (gamePlayVars.guesses.listY > Constants::scroll_Limits[gamePlayVars.guesses.yCursor]) {
+                            gamePlayVars.guesses.listY = gamePlayVars.guesses.listY - 1;
                         }
                         else{
-                            keyboardState = KeyboardState::StartShowing;
+                            gamePlayVars.keyboard.state = KeyboardState::StartShowing;
                         }
 
                         break;
@@ -193,7 +193,7 @@ void game() {
 
             if (arduboy.justPressed(DOWN_BUTTON))   {
                 
-                switch (keyboardState) {
+                switch (gamePlayVars.keyboard.state) {
 
                     case KeyboardState::Showing:
                         moveCursor(Direction::Down);
@@ -209,45 +209,45 @@ void game() {
 
             if (arduboy.justPressed(A_BUTTON)) {
 
-                if (xCursor == 0 && yCursor == 2) {
+                if (gamePlayVars.keyboard.xCursor == 0 && gamePlayVars.keyboard.yCursor == 2) {
 
-                    if (guess_CursorX > 0) {
+                    if (gamePlayVars.guesses.xCursor > 0) {
 
-                        guess_CursorX--;
-                        guess_Char[guess_CursorY][guess_CursorX] = ' ';
-                        guess_State[guess_CursorY][guess_CursorX] = GuessState::Dashed;
+                        gamePlayVars.guesses.xCursor--;
+                        gamePlayVars.guesses.chars[gamePlayVars.guesses.yCursor][gamePlayVars.guesses.xCursor] = ' ';
+                        gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][gamePlayVars.guesses.xCursor] = GuessState::Dashed;
 
                     }
 
                 }
-                else if (xCursor == 8 && yCursor == 2) {
+                else if (gamePlayVars.keyboard.xCursor == 8 && gamePlayVars.keyboard.yCursor == 2) {
 
-                    checkState = checkWord();
+                    gamePlayVars.checkState = checkWord();
 
-                    switch (checkState) {
+                    switch (gamePlayVars.checkState) {
 
                         case CheckState::CorrectWord:
-                            showInvalidWord_Count = 19;
+                            gamePlayVars.showInvalidWord_Count = 19;
                             break;
 
                         case CheckState::InvalidWord:
-                            showInvalidWord_Count = 15;
+                            gamePlayVars.showInvalidWord_Count = 15;
                             break;
 
                         case CheckState::RealWord:
 
-                            if (guess_CursorY == 5) {
+                            if (gamePlayVars.guesses.yCursor == 5) {
 
-                                checkState = CheckState::TooManyAttempts;
+                                gamePlayVars.checkState = CheckState::TooManyAttempts;
 
                             }
                             else {
                                 
-                                guess_CursorX = 0;
-                                guess_CursorY = guess_CursorY + 1;
+                                gamePlayVars.guesses.xCursor = 0;
+                                gamePlayVars.guesses.yCursor = gamePlayVars.guesses.yCursor + 1;
 
-                                if (guess_CursorY >= 2) {
-                                    guess_ListY = -((guess_CursorY - 1) * Constants::guess_Spacing);
+                                if (gamePlayVars.guesses.yCursor >= 2) {
+                                    gamePlayVars.guesses.listY = -((gamePlayVars.guesses.yCursor - 1) * Constants::guess_Spacing);
                                 }
 
                             }
@@ -260,28 +260,28 @@ void game() {
                 }
                 else {
                     
-                    if (keyboard[Constants::key_Map[yCursor][xCursor]] != KeyState::Invisible) {
+                    //if (keyboard[Constants::key_Map[gamePlayVars.keyboard.yCursor][gamePlayVars.keyboard.xCursor]] != KeyState::Invisible) {
 
-                        if (guess_CursorX < 5) {
+                        if (gamePlayVars.guesses.xCursor < 5) {
 
-                            guess_Char[guess_CursorY][guess_CursorX] = 65 + Constants::key_Map[yCursor][xCursor];
+                            gamePlayVars.guesses.chars[gamePlayVars.guesses.yCursor][gamePlayVars.guesses.xCursor] = 65 + Constants::key_Map[gamePlayVars.keyboard.yCursor][gamePlayVars.keyboard.xCursor];
 
                         }
 
-                        if (guess_CursorX < 5) {
+                        if (gamePlayVars.guesses.xCursor < 5) {
 
-                            guess_CursorX++;
+                            gamePlayVars.guesses.xCursor++;
 
-                            if (guess_CursorX == 5) {
+                            if (gamePlayVars.guesses.xCursor == 5) {
 
-                                xCursor = 8;
-                                yCursor = 2;
+                                gamePlayVars.keyboard.xCursor = 8;
+                                gamePlayVars.keyboard.yCursor = 2;
 
                             }
 
                         }
 
-                    }
+                    //}
 
                 }
 
@@ -292,30 +292,50 @@ void game() {
     }
 
 
-    drawGuesses(guess_ListY);
+    drawGuesses(gamePlayVars.guesses.listY);
 
-    switch (checkState) {
+    switch (gamePlayVars.checkState) {
 
         case CheckState::InvalidWord:
-            FX::drawBitmap(23, 48, InvalidWord, 0, dbmNormal);
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(23, 48, InvalidWord_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(5, 48, InvalidWord_FR, 0, dbmNormal);
+            }
             break;
 
         case CheckState::CorrectWord:
-            FX::drawBitmap(20, 48, Correct, 0, dbmNormal);
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(41, 48, Correct_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(41, 48, Correct_FR, 0, dbmNormal);
+            }
             break;
 
         case CheckState::TooManyAttempts:
-            FX::drawBitmap(20, 30, TooManyAttempts, 0, dbmNormal);
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(18, 37, TooManyAttempts_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(10, 37, TooManyAttempts_FR, 0, dbmNormal);
+            }
             drawSolution();
             break;
 
         case CheckState::Quit:
-            FX::drawBitmap(20, 30, Quit, 0, dbmNormal);
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(29, 37, Quit_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(32, 37, Quit_FR, 0, dbmNormal);
+            }
             drawSolution();
             break;
 
         default:
-            drawKeyboard(19, keyboardY);
+            drawKeyboard(19, gamePlayVars.keyboard.yPos);
             break;
 
     }
@@ -323,25 +343,25 @@ void game() {
 
     // Show or hide keyboard ..
 
-    switch (keyboardState) {
+    switch (gamePlayVars.keyboard.state) {
 
         case KeyboardState::StartHiding:
 
-            keyboardY++;
-            if (guess_CursorY >= 2) guess_ListY++;
+            gamePlayVars.keyboard.yPos++;
+            if (gamePlayVars.guesses.yCursor >= 2) gamePlayVars.guesses.listY++;
 
-            if (keyboardY == 64) {
-                keyboardState = KeyboardState::Hiding;
+            if (gamePlayVars.keyboard.yPos == 64) {
+                gamePlayVars.keyboard.state = KeyboardState::Hiding;
             }
             break;
 
         case KeyboardState::StartShowing:
 
-            keyboardY--;
-            if (guess_CursorY >= 2) guess_ListY--;
+            gamePlayVars.keyboard.yPos--;
+            if (gamePlayVars.guesses.yCursor >= 2) gamePlayVars.guesses.listY--;
 
-            if (keyboardY == 33) {
-                keyboardState = KeyboardState::Showing;
+            if (gamePlayVars.keyboard.yPos == 33) {
+                gamePlayVars.keyboard.state = KeyboardState::Showing;
             }
             break;
         
@@ -353,7 +373,7 @@ void game() {
 
     // Housekeeping ..
 
-    if (showInvalidWord_Count > 0 && arduboy.getFrameCount(2) == 0) showInvalidWord_Count--;
+    if (gamePlayVars.showInvalidWord_Count > 0 && arduboy.getFrameCount(2) == 0) gamePlayVars.showInvalidWord_Count--;
 
 }
 
@@ -365,7 +385,7 @@ void drawSolution() {
     for (uint8_t x = 0; x < 5; x++) {
 
         arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3, 50);
-        arduboy.print(selectedWord[x]);
+        arduboy.print(gamePlayVars.selectedWord[x]);
         arduboy.drawRect(Constants::guess_Left + (x * Constants::guess_Spacing), 50 - 2, Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
 
     }
@@ -375,7 +395,7 @@ void drawSolution() {
 
 void drawGuesses(int8_t yOffset) {
 
-    for (uint8_t y = 0; y < guess_CursorY + 1; y++) {
+    for (uint8_t y = 0; y < gamePlayVars.guesses.yCursor + 1; y++) {
 
 
         // Animate last row?
@@ -383,26 +403,26 @@ void drawGuesses(int8_t yOffset) {
         int8_t xMove = 0;
         int8_t yMove[5] = { 0, 0, 0, 0, 0 };
         
-        switch (checkState) {
+        switch (gamePlayVars.checkState) {
 
             case CheckState::InvalidWord:
 
-                if (y == guess_CursorY) {
-                    if (showInvalidWord_Count > 0) {
-                        xMove = Constants::shake[showInvalidWord_Count];
+                if (y == gamePlayVars.guesses.yCursor) {
+                    if (gamePlayVars.showInvalidWord_Count > 0) {
+                        xMove = Constants::shake[gamePlayVars.showInvalidWord_Count];
                     }
                 }
                 break;
 
             case CheckState::CorrectWord:
 
-                if (y == guess_CursorY) {
+                if (y == gamePlayVars.guesses.yCursor) {
 
-                    if (showInvalidWord_Count > 0 && showInvalidWord_Count < 15) yMove[0] = Constants::shake[showInvalidWord_Count];
-                    if (showInvalidWord_Count > 1 && showInvalidWord_Count < 16) yMove[1] = Constants::shake[showInvalidWord_Count - 1];
-                    if (showInvalidWord_Count > 2 && showInvalidWord_Count < 17) yMove[2] = Constants::shake[showInvalidWord_Count - 2];
-                    if (showInvalidWord_Count > 3 && showInvalidWord_Count < 18) yMove[3] = Constants::shake[showInvalidWord_Count - 3];
-                    if (showInvalidWord_Count > 4 && showInvalidWord_Count < 19) yMove[4] = Constants::shake[showInvalidWord_Count - 4];
+                    if (gamePlayVars.showInvalidWord_Count > 0 && gamePlayVars.showInvalidWord_Count < 15) yMove[0] = Constants::shake[gamePlayVars.showInvalidWord_Count];
+                    if (gamePlayVars.showInvalidWord_Count > 1 && gamePlayVars.showInvalidWord_Count < 16) yMove[1] = Constants::shake[gamePlayVars.showInvalidWord_Count - 1];
+                    if (gamePlayVars.showInvalidWord_Count > 2 && gamePlayVars.showInvalidWord_Count < 17) yMove[2] = Constants::shake[gamePlayVars.showInvalidWord_Count - 2];
+                    if (gamePlayVars.showInvalidWord_Count > 3 && gamePlayVars.showInvalidWord_Count < 18) yMove[3] = Constants::shake[gamePlayVars.showInvalidWord_Count - 3];
+                    if (gamePlayVars.showInvalidWord_Count > 4 && gamePlayVars.showInvalidWord_Count < 19) yMove[4] = Constants::shake[gamePlayVars.showInvalidWord_Count - 4];
 
                 }
 
@@ -417,26 +437,26 @@ void drawGuesses(int8_t yOffset) {
 
         for (uint8_t x = 0; x < 5; x++) {
 
-            switch (guess_State[y][x]) {
+            switch (gamePlayVars.guesses.state[y][x]) {
 
                 case GuessState::Correct:
                     arduboy.setTextColor(BLACK);
                     arduboy.fillRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
                     arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
-                    arduboy.print(guess_Char[y][x]);
+                    arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     break;
 
                 case GuessState::WrongPosition:
                     arduboy.setTextColor(WHITE);
                     arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
-                    arduboy.print(guess_Char[y][x]);
+                    arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     arduboy.drawRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
                     break;
 
                 case GuessState::Dashed:
                     arduboy.setTextColor(WHITE);
                     arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
-                    arduboy.print(guess_Char[y][x]);
+                    arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 1 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
                     arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
                     arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 5 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
@@ -448,7 +468,7 @@ void drawGuesses(int8_t yOffset) {
                 default:
                     arduboy.setTextColor(WHITE);
                     arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
-                    arduboy.print(guess_Char[y][x]);
+                    arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     break;
 
             }

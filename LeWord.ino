@@ -9,31 +9,9 @@
 #include "src/utils/EEPROM_Utils.h"
 #include "src/utils/Structs.h"
 
-
-GamePlayVars gamePlayVars;
-KeyState keyboard[26];
-
-char guess_Char[6][5];
-GuessState guess_State[6][5];
-uint8_t guess_CursorX = 0;
-uint8_t guess_CursorY = 0;
-int8_t guess_ListY = 0;
-
 Arduboy2Ext arduboy;
-uint8_t xCursor = 0;
-uint8_t yCursor = 0;
-uint8_t keyboardY = 33;
-KeyboardState keyboardState;
-
-uint8_t showInvalidWord_Count = 0;
-CheckState checkState = CheckState::Normal;
-uint8_t cancelButton = 0;
-
-#ifdef USE_BRINE
-char selectedWord[5] = { 'B', 'R', 'I', 'N', 'E' };
-#else
-char selectedWord[5] = { ' ', ' ', ' ', ' ', ' ' };
-#endif
+TitleScreenVars titleScreenVars;
+GamePlayVars gamePlayVars;
 
 GameState gameState = GameState::SplashScreen_Init;
 
@@ -48,7 +26,8 @@ void setup() {
     FX::disableOLED();  
     FX::begin(FX_DATA_PAGE); 
 
-    EEPROM_Utils::initEEPROM(false);
+    EEPROM_Utils::initEEPROM(false, GameMode::English, true);
+    gamePlayVars.mode = EEPROM_Utils::getMode();
 
 }
 

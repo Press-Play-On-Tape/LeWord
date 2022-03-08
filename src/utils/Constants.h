@@ -1,11 +1,11 @@
 #pragma once
 
-#define _USE_BRINE
+#define USE_BRINE
 /* TEASE PRUNE DRONE CRIME BLINK and BRIEF or BRINE */
 
 namespace Constants {
 
-    constexpr uint8_t guess_Left = 30;
+    constexpr uint8_t guess_Left = 32;
     constexpr uint8_t guess_Spacing = 13;
 
     constexpr uint8_t key_Map[3][10] = { 
@@ -20,9 +20,14 @@ namespace Constants {
 
     constexpr uint16_t EEPROM_Char1 = 78;
     constexpr uint16_t EEPROM_Char2 = EEPROM_Char1 + 1;
-    constexpr uint16_t EEPROM_Games_Won = EEPROM_Char2 + 1;
-    constexpr uint16_t EEPROM_Games_Played = EEPROM_Games_Won + 2;
-    constexpr uint16_t EEPROM_Current_Streak = EEPROM_Games_Played + 2;
-    constexpr uint16_t EEPROM_Max_Streak = EEPROM_Current_Streak + 2;
+    constexpr uint16_t EEPROM_Mode = EEPROM_Char2 + 1;
+    constexpr uint16_t EEPROM_Games_Won_EN = EEPROM_Mode + 1;
+    constexpr uint16_t EEPROM_Games_Played_EN = EEPROM_Games_Won_EN + 2;
+    constexpr uint16_t EEPROM_Current_Streak_EN = EEPROM_Games_Played_EN + 2;
+    constexpr uint16_t EEPROM_Max_Streak_EN = EEPROM_Current_Streak_EN + 2;
+    constexpr uint16_t EEPROM_Games_Won_FR = EEPROM_Max_Streak_EN + 2;
+    constexpr uint16_t EEPROM_Games_Played_FR = EEPROM_Games_Won_FR + 2;
+    constexpr uint16_t EEPROM_Current_Streak_FR = EEPROM_Games_Played_FR + 2;
+    constexpr uint16_t EEPROM_Max_Streak_FR = EEPROM_Current_Streak_FR + 2;
 
 };

@@ -1,49 +1,27 @@
 #include <Arduboy2.h>  
 #include <ArduboyFX.h> 
 
-void resetKeyboard() {
-
-    for (uint8_t i = 0; i < 26; i++) {
-        keyboard[i] = KeyState::Visible;
-    }
-}
-
-void resetGuesses() {
-
-    for (uint8_t y = 0; y < 6; y++) {
-        for (uint8_t x = 0; x < 5; x++) {
-            guess_Char[y][x] = ' ';
-            guess_State[y][x] = GuessState::Dashed;
-        }
-    }
-
-    guess_CursorX = 0;
-    guess_CursorY = 0;
-    guess_ListY = 0;
-
-}
-
 void moveCursor(Direction direction) {
 
     switch (direction) {
 
         case Direction::Right:
     
-            switch (yCursor) {
+            switch (gamePlayVars.keyboard.yCursor) {
 
                 case 0:
-                    if (xCursor < 9) {
+                    if (gamePlayVars.keyboard.xCursor < 9) {
                         
-                        xCursor++;
+                        gamePlayVars.keyboard.xCursor++;
 
                     }
                     break;
 
                 case 1:
                 case 2:
-                    if (xCursor < 8) {
+                    if (gamePlayVars.keyboard.xCursor < 8) {
                         
-                        xCursor++;
+                        gamePlayVars.keyboard.xCursor++;
 
                     }
                     break;
@@ -54,30 +32,30 @@ void moveCursor(Direction direction) {
 
         case Direction::Left:
 
-            if (xCursor > 0) {
-                xCursor--;
+            if (gamePlayVars.keyboard.xCursor > 0) {
+                gamePlayVars.keyboard.xCursor--;
             }
 
             break;
 
         case Direction::Down:
     
-            switch (yCursor) {
+            switch (gamePlayVars.keyboard.yCursor) {
 
                 case 0:
-                    if (xCursor == 9) {
+                    if (gamePlayVars.keyboard.xCursor == 9) {
                         
-                        yCursor++;
-                        xCursor--;
+                        gamePlayVars.keyboard.yCursor++;
+                        gamePlayVars.keyboard.xCursor--;
 
                     }
                     else {
-                        yCursor++;
+                        gamePlayVars.keyboard.yCursor++;
                     }
                     break;
 
                 case 1:
-                    yCursor++;
+                    gamePlayVars.keyboard.yCursor++;
                     break;
 
             }
@@ -86,29 +64,29 @@ void moveCursor(Direction direction) {
 
         case Direction::Up:
     
-            if (yCursor == 0) {
+            if (gamePlayVars.keyboard.yCursor == 0) {
 
-                keyboardState = KeyboardState::StartHiding;
+                gamePlayVars.keyboard.state = KeyboardState::StartHiding;
                 break;
 
             }
             else {
 
-                switch (yCursor) {
+                switch (gamePlayVars.keyboard.yCursor) {
 
                     case 0:
                     case 2:
-                        if (xCursor == 9) {
-                            yCursor--;
-                            xCursor--;
+                        if (gamePlayVars.keyboard.xCursor == 9) {
+                            gamePlayVars.keyboard.yCursor--;
+                            gamePlayVars.keyboard.xCursor--;
                         }
                         else {
-                            yCursor--;
+                            gamePlayVars.keyboard.yCursor--;
                         }
                         break;
 
                     case 1:
-                        yCursor--;
+                        gamePlayVars.keyboard.yCursor--;
                         break;
 
 
@@ -131,9 +109,9 @@ CheckState checkWord() {
     uint8_t answer[5];
     
     for (uint8_t i = 0; i < 5; i++) {
-        guessWord[i] = guess_Char[guess_CursorY][i];
-        answer[i] = selectedWord[i];
-        guess_State[guess_CursorY][i] = GuessState::Incorrect;
+        guessWord[i] = gamePlayVars.guesses.chars[gamePlayVars.guesses.yCursor][i];
+        answer[i] = gamePlayVars.selectedWord[i];
+        gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] = GuessState::Incorrect;
     }
 
 
@@ -150,7 +128,7 @@ CheckState checkWord() {
     if (isCorrectWord) {
 
         for (uint8_t i = 0; i < 5; i++) {
-            guess_State[guess_CursorY][i] = GuessState::Correct; 
+            gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] = GuessState::Correct; 
         }
 
         return CheckState::CorrectWord;
@@ -167,7 +145,7 @@ CheckState checkWord() {
                 FX::seekData(English_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
-                FX::seekData(English_Words + (English_AlphaMap * 6));
+                FX::seekData(English_Words + (alphaStart * 6));
 
             }
             break;
@@ -178,7 +156,7 @@ CheckState checkWord() {
                 FX::seekData(French_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
-                FX::seekData(French_Words + (French_AlphaMap * 6));
+                FX::seekData(French_Words + (alphaStart * 6));
 
             }
             break;
@@ -222,28 +200,21 @@ CheckState checkWord() {
             for (uint8_t i = 0; i < 5; i++) {
 
                 if (guessWord[i] == answer[i]) { 
-                    guess_State[guess_CursorY][i] = GuessState::Correct; 
+                    gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] = GuessState::Correct; 
                     answer[i] = ' ';
                 }
 
             }
-// Serial.print("Z ");
-//             for (uint8_t i = 0; i < 5; i++) {
 
-// Serial.print(" ");
-// Serial.print((uint8_t)guess_State[guess_CursorY][i]);
-
-//             }
-// Serial.println(" ");
             for (uint8_t i = 0; i < 5; i++) {
 
-                if (guessWord[i] != selectedWord[i]) { 
+                if (guessWord[i] != gamePlayVars.selectedWord[i]) { 
 
                     for (uint8_t j = 0; j < 5; j++) {
 
-                        if (guess_State[guess_CursorY][j] != GuessState::Correct && testWord[i] == answer[j]) { 
+                        if (gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][j] != GuessState::Correct && testWord[i] == answer[j]) { 
 
-                            guess_State[guess_CursorY][i] = GuessState::WrongPosition;
+                            gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] = GuessState::WrongPosition;
                             answer[j] = ' ';
                             break;
                     
@@ -256,62 +227,35 @@ CheckState checkWord() {
 
             }
 
-// Serial.print("A ");
-//             for (uint8_t i = 0; i < 5; i++) {
-
-// Serial.print(" ");
-// Serial.print((uint8_t)guess_State[guess_CursorY][i]);
-
-//             }
-// Serial.println(" ");
 
             // If the letter is not found but already exists, we cannot remove it from the keyboard ..
 
             for (uint8_t i = 0; i < 5; i++) {
 
-                if (guess_State[guess_CursorY][i] == GuessState::Incorrect) {
-// Serial.println(i);
+                if (gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] == GuessState::Incorrect) {
+
                     for (uint8_t j = 0; j < 5; j++) {
-// Serial.print(j);
-// Serial.print(" ");
-// Serial.print((uint8_t)guess_State[guess_CursorY][j]);
-// Serial.print(" != ");
-// Serial.print(1);
-// Serial.print(" && ");
-// Serial.print(guessWord[i]);
-// Serial.print(" == ");
-// Serial.print(selectedWord[j]);
-// Serial.print(", ");
 
-                        // if (guess_State[guess_CursorY][j] == GuessState::Incorrect && guessWord[i] == selectedWord[j]) { 
-                        if (guessWord[i] == selectedWord[j]) { 
+                        if (guessWord[i] == gamePlayVars.selectedWord[j]) { 
 
-                            guess_State[guess_CursorY][i] = GuessState::Duplicate;
+                            gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] = GuessState::Duplicate;
                     
                         }
                     
                     }
-// Serial.println("");
 
                 }
 
             }
 
-// Serial.print("B ");
-//             for (uint8_t i = 0; i < 5; i++) {
 
-// Serial.print(" ");
-// Serial.print((uint8_t)guess_State[guess_CursorY][i]);
-
-//             }
-// Serial.println(" ");
             // Disable the keys for letters not found in solution ..
 
             for (uint8_t i = 0; i < 5; i++) {
 
-                if (guess_State[guess_CursorY][i] == GuessState::Incorrect) { 
+                if (gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][i] == GuessState::Incorrect) { 
 
-                    keyboard[guessWord[i] - 65] = KeyState::Invisible;
+                    gamePlayVars.keyboard.keys[guessWord[i] - 65] = KeyState::Invisible;
             
                 }
 
@@ -319,21 +263,17 @@ CheckState checkWord() {
 
 
             // Clear duplicate marks ..
-// Serial.print("C ");
 
             for (uint8_t j = 0; j < 5; j++) {
 
-// Serial.print(" ");
-// Serial.print((uint8_t)guess_State[guess_CursorY][j]);
+                if (gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][j] == GuessState::Duplicate) { 
 
-                if (guess_State[guess_CursorY][j] == GuessState::Duplicate) { 
-
-                    guess_State[guess_CursorY][j] = GuessState::Incorrect;
+                    gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][j] = GuessState::Incorrect;
             
                 }
             
             }
-// Serial.println(" ");
+
             return CheckState::RealWord;
 
         }

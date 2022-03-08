@@ -19,11 +19,11 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
         uint8_t x = xPos * (key_Width - 1) + (key_PosY[i] >= 2 ? 4 : 0) + (key_PosY[i] == 3 ? -2 : 0);
         uint8_t y = yPos * (key_Height - 1); 
 
-        if (xPos == xCursor && yPos == yCursor && keyboardState == KeyboardState::Showing) {
+        if (xPos == gamePlayVars.keyboard.xCursor && yPos == gamePlayVars.keyboard.yCursor && gamePlayVars.keyboard.state == KeyboardState::Showing) {
 
             FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B[i], 0, dbmWhite);
 
-            if (keyboard[Constants::key_Map[yCursor][xCursor]] != KeyState::Invisible) {
+            if (gamePlayVars.keyboard.keys[Constants::key_Map[gamePlayVars.keyboard.yCursor][gamePlayVars.keyboard.xCursor]] != KeyState::Invisible) {
                 FX::drawBitmap(x + xOffset, y + 1 + yOffset, Keyboard_B_Cursor, 0, dbmMasked);
             }
             else {
@@ -33,7 +33,7 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
         }
         else {
 
-            if (keyboard[i] == KeyState::Visible) {
+            if (gamePlayVars.keyboard.keys[i] == KeyState::Visible) {
                 FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_W[i], 0, dbmWhite);
             }
             else {
@@ -47,7 +47,7 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
 
     // Delete key ..
 
-    if (xCursor == 0 && yCursor == 2) {
+    if (gamePlayVars.keyboard.xCursor == 0 && gamePlayVars.keyboard.yCursor == 2) {
         FX::drawBitmap(xOffset, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B[26], 0, dbmWhite);
     }
     else {
@@ -57,7 +57,7 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
 
     // Enter Key ..
 
-    if (xCursor == 8 && yCursor == 2) {
+    if (gamePlayVars.keyboard.xCursor == 8 && gamePlayVars.keyboard.yCursor == 2) {
         FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B[27], 0, dbmWhite);
     }
     else {
@@ -67,5 +67,19 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
     arduboy.drawFastHLine(19, yOffset, 91);
     arduboy.drawFastVLine(18, yOffset + 1, 50);
     arduboy.drawFastVLine(110, yOffset + 1, 50);
+
+    switch (gamePlayVars.keyboard.state) {
+
+        case KeyboardState::Showing:
+        case KeyboardState::StartShowing:
+            FX::drawBitmap(105, yOffset - 4, Arrow_Up, 0, dbmWhite);
+            break;
+
+        case KeyboardState::Hiding:
+        case KeyboardState::StartHiding:
+            FX::drawBitmap(105, yOffset - 4, Arrow_Down, 0, dbmWhite);
+            break;
+
+    }
 
 }

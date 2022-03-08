@@ -9,51 +9,76 @@ class EEPROM_Utils {
 
         EEPROM_Utils() {};
         
-        static void initEEPROM(bool forceClear);
-        static void increaseCorrectWords();
-        static void resetWiningStreak();
+        static void initEEPROM(bool forceClear, GameMode gameMode, bool clearBoth);
+        static void increaseCorrectWords(GameMode gameMode);
+        static void resetWiningStreak(GameMode gameMode);
+        static void setMode(GameMode gameMode);
+        static GameMode getMode();
 
 };
 
 
 /* ----------------------------------------------------------------------------
  *   Is the EEPROM initialised?
- *
- *   Looks for the characters 'L' and 'W' in the first two bytes of the EEPROM
- *   memory range starting from byte EEPROM_STORAGE_SPACE_START.  If not found,
- *   it resets the settings ..
  */
-void EEPROM_Utils::initEEPROM(bool forceClear) {
+void EEPROM_Utils::initEEPROM(bool forceClear, GameMode gameMode, bool clearBoth) {
 
     byte c1 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char1));
     byte c2 = eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2));
 
     uint16_t zero = 0;
 
-    if (forceClear || c1 != 'L' || c2 != 'W') { 
+    if (forceClear || c1 != 'L' || c2 != 'E') { 
 
         eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char1), 'L');
-        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2), 'W');
-        EEPROM.put(Constants::EEPROM_Games_Won, zero);
-        EEPROM.put(Constants::EEPROM_Games_Played, zero);
-        EEPROM.put(Constants::EEPROM_Current_Streak, zero);
-        EEPROM.put(Constants::EEPROM_Max_Streak, zero);
+        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2), 'E');
+        eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Mode), static_cast<uint8_t>(gameMode));
+
+        if (forceClear || gameMode == GameMode::English || clearBoth) { 
+
+            EEPROM.put(Constants::EEPROM_Games_Won_EN, zero);
+            EEPROM.put(Constants::EEPROM_Games_Played_EN, zero);
+            EEPROM.put(Constants::EEPROM_Current_Streak_EN, zero);
+            EEPROM.put(Constants::EEPROM_Max_Streak_EN, zero);
+
+        }
+
+        if (forceClear || gameMode == GameMode::French || clearBoth) { 
+
+            EEPROM.put(Constants::EEPROM_Games_Won_FR, zero);
+            EEPROM.put(Constants::EEPROM_Games_Played_FR, zero);
+            EEPROM.put(Constants::EEPROM_Current_Streak_FR, zero);
+            EEPROM.put(Constants::EEPROM_Max_Streak_FR, zero);
+
+        }
 
     }
 
 }
 
-void EEPROM_Utils::increaseCorrectWords() {
+void EEPROM_Utils::increaseCorrectWords(GameMode gameMode) {
 
     uint16_t gamesWon = 0;
     uint16_t gamesPlayed = 0;
     uint16_t currentStreak = 0;
     uint16_t maxStreak = 0;
 
-    EEPROM.get(Constants::EEPROM_Games_Won, gamesWon);
-    EEPROM.get(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.get(Constants::EEPROM_Current_Streak, currentStreak);
-    EEPROM.get(Constants::EEPROM_Max_Streak, maxStreak);
+    if (gameMode == GameMode::English) {
+
+        EEPROM.get(Constants::EEPROM_Games_Won_EN, gamesWon);
+        EEPROM.get(Constants::EEPROM_Games_Played_EN, gamesPlayed);
+        EEPROM.get(Constants::EEPROM_Current_Streak_EN, currentStreak);
+        EEPROM.get(Constants::EEPROM_Max_Streak_EN, maxStreak);
+
+    }
+    else {
+
+        EEPROM.get(Constants::EEPROM_Games_Won_FR, gamesWon);
+        EEPROM.get(Constants::EEPROM_Games_Played_FR, gamesPlayed);
+        EEPROM.get(Constants::EEPROM_Current_Streak_FR, currentStreak);
+        EEPROM.get(Constants::EEPROM_Max_Streak_FR, maxStreak);
+
+    }
 
     gamesWon++;
     gamesPlayed++;
@@ -61,27 +86,57 @@ void EEPROM_Utils::increaseCorrectWords() {
 
     if (currentStreak > maxStreak) maxStreak = currentStreak;
 
-    EEPROM.put(Constants::EEPROM_Games_Won, gamesWon);
-    EEPROM.put(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.put(Constants::EEPROM_Current_Streak, currentStreak);
-    EEPROM.put(Constants::EEPROM_Max_Streak, maxStreak);
+    if (gameMode == GameMode::English) {
+
+        EEPROM.put(Constants::EEPROM_Games_Won_EN, gamesWon);
+        EEPROM.put(Constants::EEPROM_Games_Played_EN, gamesPlayed);
+        EEPROM.put(Constants::EEPROM_Current_Streak_EN, currentStreak);
+        EEPROM.put(Constants::EEPROM_Max_Streak_EN, maxStreak);
+
+    }
+    else {
+
+        EEPROM.put(Constants::EEPROM_Games_Won_FR, gamesWon);
+        EEPROM.put(Constants::EEPROM_Games_Played_FR, gamesPlayed);
+        EEPROM.put(Constants::EEPROM_Current_Streak_FR, currentStreak);
+        EEPROM.put(Constants::EEPROM_Max_Streak_FR, maxStreak);
+
+    }
 
 }
 
-void EEPROM_Utils::resetWiningStreak() {
+void EEPROM_Utils::resetWiningStreak(GameMode gameMode) {
 
     uint16_t gamesPlayed = 0;
     uint16_t currentStreak = 0;
 
-    EEPROM.get(Constants::EEPROM_Games_Played, gamesPlayed);
+    if (gameMode == GameMode::English) {
 
-    gamesPlayed++;
+        EEPROM.get(Constants::EEPROM_Games_Played_EN, gamesPlayed);
+        gamesPlayed++;
+        EEPROM.put(Constants::EEPROM_Games_Played_EN, gamesPlayed);
+        EEPROM.put(Constants::EEPROM_Current_Streak_EN, currentStreak);
 
-    EEPROM.put(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.put(Constants::EEPROM_Current_Streak, currentStreak);
+    }
+    else {
+
+        EEPROM.get(Constants::EEPROM_Games_Played_FR, gamesPlayed);
+        gamesPlayed++;
+        EEPROM.put(Constants::EEPROM_Games_Played_FR, gamesPlayed);
+        EEPROM.put(Constants::EEPROM_Current_Streak_FR, currentStreak);
+
+    }
 
 }
 
+void EEPROM_Utils::setMode(GameMode gameMode) {
 
+    eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Mode), static_cast<uint8_t>(gameMode));
 
+}
 
+GameMode EEPROM_Utils::getMode() {
+
+    return static_cast<GameMode>(eeprom_read_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Mode)));
+
+}

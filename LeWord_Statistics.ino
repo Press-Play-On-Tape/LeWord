@@ -18,10 +18,22 @@ void statistics() {
     uint16_t maxStreak = 0;
     uint16_t percent = 0;
 
-    EEPROM.get(Constants::EEPROM_Games_Won, gamesWon);
-    EEPROM.get(Constants::EEPROM_Games_Played, gamesPlayed);
-    EEPROM.get(Constants::EEPROM_Current_Streak, currentStreak);
-    EEPROM.get(Constants::EEPROM_Max_Streak, maxStreak);
+    if (gamePlayVars.mode == GameMode::English) {
+
+        EEPROM.get(Constants::EEPROM_Games_Won_EN, gamesWon);
+        EEPROM.get(Constants::EEPROM_Games_Played_EN, gamesPlayed);
+        EEPROM.get(Constants::EEPROM_Current_Streak_EN, currentStreak);
+        EEPROM.get(Constants::EEPROM_Max_Streak_EN, maxStreak);
+
+    }
+    else {
+
+        EEPROM.get(Constants::EEPROM_Games_Won_FR, gamesWon);
+        EEPROM.get(Constants::EEPROM_Games_Played_FR, gamesPlayed);
+        EEPROM.get(Constants::EEPROM_Current_Streak_FR, currentStreak);
+        EEPROM.get(Constants::EEPROM_Max_Streak_FR, maxStreak);
+
+    }
 
     percent = (gamesPlayed == 0 ? 0 : (gamesWon * 100) / gamesPlayed);
 
@@ -37,20 +49,25 @@ void statistics() {
 
     if (arduboy.pressed(B_BUTTON)) {
 
-        cancelButton++;
+        gamePlayVars.cancelButton++;
 
-        if (cancelButton == 64) {
-            EEPROM_Utils::initEEPROM(true);
+        if (gamePlayVars.cancelButton == 64) {
+            EEPROM_Utils::initEEPROM(true, gamePlayVars.mode, false);
         }
 
     }
     else {
 
-        cancelButton = false;
+        gamePlayVars.cancelButton = false;
 
     }
 
-    FX::drawBitmap(0, 0, Statistics, 0, dbmNormal);
+    if (gamePlayVars.mode == GameMode::English) {
+        FX::drawBitmap(0, 0, Statistics_EN, 0, dbmNormal);
+    }
+    else {
+        FX::drawBitmap(0, 0, Statistics_FR, 0, dbmNormal);
+    }
 
     arduboy.setCursor(31, 14);
     if (gamesPlayed < 100) { arduboy.print("0"); }
