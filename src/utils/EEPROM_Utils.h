@@ -34,7 +34,7 @@ void EEPROM_Utils::initEEPROM(bool forceClear, GameMode gameMode, bool clearBoth
         eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Char2), 'E');
         eeprom_update_byte(reinterpret_cast<uint8_t *>(Constants::EEPROM_Mode), static_cast<uint8_t>(gameMode));
 
-        if (forceClear || gameMode == GameMode::English || clearBoth) { 
+        if ((forceClear && gameMode == GameMode::English) || clearBoth) { 
 
             EEPROM.put(Constants::EEPROM_Games_Won_EN, zero);
             EEPROM.put(Constants::EEPROM_Games_Played_EN, zero);
@@ -43,7 +43,7 @@ void EEPROM_Utils::initEEPROM(bool forceClear, GameMode gameMode, bool clearBoth
 
         }
 
-        if (forceClear || gameMode == GameMode::French || clearBoth) { 
+        if ((forceClear && gameMode == GameMode::French) || clearBoth) { 
 
             EEPROM.put(Constants::EEPROM_Games_Won_FR, zero);
             EEPROM.put(Constants::EEPROM_Games_Played_FR, zero);

@@ -101,7 +101,6 @@ void game() {
 
         case CheckState::InvalidWord:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::resetWiningStreak(gamePlayVars.mode);
                 gamePlayVars.checkState = CheckState::Normal;
             }
             break;
