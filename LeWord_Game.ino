@@ -29,11 +29,11 @@ void game_Init() {
 
                     uint8_t status = FX::readPendingUInt8();
 
-                    // for (uint8_t i = 0; i < 5; i++) {
-                    // gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
+                    for (uint8_t i = 0; i < 5; i++) {
+                        gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
                     // Serial.print(gamePlayVars.selectedWord[i]);
                     // Serial.print(" ");
-                    // }
+                    }
                     // Serial.println("");
 
                     FX::readEnd();
@@ -48,11 +48,11 @@ void game_Init() {
 
                     uint8_t status = FX::readPendingUInt8();
 
-                    // for (uint8_t i = 0; i < 5; i++) {
-                    // gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
-                    // Serial.print(gamePlayVars.selectedWord[i]);
+                    for (uint8_t i = 0; i < 5; i++) {
+                        gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
+                    //Serial.print(gamePlayVars.selectedWord[i]);
                     // Serial.print(" ");
-                    // }
+                    }
                     // Serial.println("");
 
                     FX::readEnd();
@@ -314,16 +314,17 @@ void game() {
             break;
 
         case CheckState::TooManyAttempts:
+            drawSolution();
             if (gamePlayVars.mode == GameMode::English) {
                 FX::drawBitmap(18, 37, TooManyAttempts_EN, 0, dbmNormal);
             }
             else {
                 FX::drawBitmap(10, 37, TooManyAttempts_FR, 0, dbmNormal);
             }
-            drawSolution();
             break;
 
         case CheckState::Quit:
+            arduboy.fillRect(0, 35, WIDTH, 32, BLACK);
             if (gamePlayVars.mode == GameMode::English) {
                 FX::drawBitmap(29, 37, Quit_EN, 0, dbmNormal);
             }
@@ -381,13 +382,17 @@ void drawSolution() {
 
     // Render words ..
 
+    arduboy.setTextColor(BLACK);
+
     for (uint8_t x = 0; x < 5; x++) {
 
+        arduboy.fillRect(Constants::guess_Left + (x * Constants::guess_Spacing), 50 - 2, Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
         arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3, 50);
         arduboy.print(gamePlayVars.selectedWord[x]);
-        arduboy.drawRect(Constants::guess_Left + (x * Constants::guess_Spacing), 50 - 2, Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
 
     }
+
+    arduboy.setTextColor(WHITE);
 
 }
 
