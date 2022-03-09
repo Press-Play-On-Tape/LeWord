@@ -1,6 +1,6 @@
 #pragma once
 
-#define USE_BRINE
+#define _USE_BRINE
 /* TEASE PRUNE DRONE CRIME BLINK and BRIEF or BRINE */
 
 namespace Constants {
