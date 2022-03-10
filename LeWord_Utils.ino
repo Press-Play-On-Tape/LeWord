@@ -15,6 +15,11 @@ void moveCursor(Direction direction) {
                         gamePlayVars.keyboard.xCursor++;
 
                     }
+                    else {
+
+                        gamePlayVars.keyboard.xCursor = 0;
+
+                    }
                     break;
 
                 case 1:
@@ -24,6 +29,11 @@ void moveCursor(Direction direction) {
                         gamePlayVars.keyboard.xCursor++;
 
                     }
+                    else {
+
+                        gamePlayVars.keyboard.xCursor = 0;
+
+                    }
                     break;
 
             }
@@ -31,11 +41,40 @@ void moveCursor(Direction direction) {
             break;
 
         case Direction::Left:
+    
+            switch (gamePlayVars.keyboard.yCursor) {
 
-            if (gamePlayVars.keyboard.xCursor > 0) {
-                gamePlayVars.keyboard.xCursor--;
+                case 0:
+                    if (gamePlayVars.keyboard.xCursor > 0) {
+
+                        gamePlayVars.keyboard.xCursor--;
+
+                    }
+                    else {
+
+                        gamePlayVars.keyboard.xCursor = 9;
+
+                    }
+
+                    break;
+
+                case 1:
+                case 2:
+                    if (gamePlayVars.keyboard.xCursor > 0) {
+
+                        gamePlayVars.keyboard.xCursor--;
+
+                    }
+                    else {
+
+                        gamePlayVars.keyboard.xCursor = 8;
+
+                    }
+
+                    break;
+
             }
-
+             
             break;
 
         case Direction::Down:

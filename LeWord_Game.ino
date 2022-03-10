@@ -205,6 +205,17 @@ void game() {
 
             }
 
+            if (arduboy.justPressed(B_BUTTON)) {
+
+                if (gamePlayVars.guesses.xCursor > 0) {
+
+                    gamePlayVars.guesses.xCursor--;
+                    gamePlayVars.guesses.chars[gamePlayVars.guesses.yCursor][gamePlayVars.guesses.xCursor] = ' ';
+                    gamePlayVars.guesses.state[gamePlayVars.guesses.yCursor][gamePlayVars.guesses.xCursor] = GuessState::Dashed;
+
+                }
+
+            }
 
             if (arduboy.justPressed(A_BUTTON)) {
 
