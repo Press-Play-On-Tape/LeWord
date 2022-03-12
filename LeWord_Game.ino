@@ -23,20 +23,21 @@ void game_Init() {
 
             case GameMode::English:
                 {
-                    uint24_t numberOfWords = (English_EndOfWordData - English_Words) / 6;
+                    while (true) {
 
-                    FX::seekData(English_Words + (random(0, numberOfWords) * 6));
+                        uint24_t numberOfWords = (English_EndOfWordData - English_Words) / 6;
+                        FX::seekData(English_Words + (random(0, numberOfWords) * 6));
+                        uint8_t status = FX::readPendingUInt8();
 
-                    uint8_t status = FX::readPendingUInt8();
+                        for (uint8_t i = 0; i < 5; i++) {
+                            gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
+                        }
 
-                    for (uint8_t i = 0; i < 5; i++) {
-                        gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
-                    // Serial.print(gamePlayVars.selectedWord[i]);
-                    // Serial.print(" ");
+                        FX::readEnd();
+
+                        if (status == 1) break;
+
                     }
-                    // Serial.println("");
-
-                    FX::readEnd();
                 }
                 break;
 
@@ -63,20 +64,28 @@ void game_Init() {
 
     #endif
 
-//  gamePlayVars.selectedWord[0] = 'H';
-//  gamePlayVars.selectedWord[1] = 'O';
-//  gamePlayVars.selectedWord[2] = 'R';
-//  gamePlayVars.selectedWord[3] = 'S';
-//  gamePlayVars.selectedWord[4] = 'E';
-
-//  gamePlayVars.selectedWord[0] = 'T';
-//  gamePlayVars.selectedWord[1] = 'H';
-//  gamePlayVars.selectedWord[2] = 'E';
-//  gamePlayVars.selectedWord[3] = 'M';
-//  gamePlayVars.selectedWord[4] = 'E';
 }
 
 void game() {
+Serial.println(man_delay);
+    uint8_t tmpManX = 0;
+    uint8_t tmpManB = 0;
+    uint8_t tmpManI = 0;
+    uint8_t tmpManP = 0;
+    uint8_t tmpManK = 0;
+
+
+    if (man_delay == 0) {
+
+        FX::seekData(static_cast<uint24_t>(ManData + (man_Idx * 5)));
+        tmpManX = FX::readPendingUInt8();
+        tmpManK = FX::readPendingUInt8();
+        tmpManB = FX::readPendingUInt8();
+        tmpManI = FX::readPendingUInt8();
+        tmpManP = FX::readPendingUInt8();
+        FX::readEnd();
+
+    }
 
 
     // Press B to quit ..
@@ -302,7 +311,7 @@ void game() {
     }
 
 
-    drawGuesses(gamePlayVars.guesses.listY);
+    drawGuesses(tmpManK, gamePlayVars.guesses.listY);
 
     switch (gamePlayVars.checkState) {
 
@@ -346,7 +355,7 @@ void game() {
             break;
 
         default:
-            drawKeyboard(19, gamePlayVars.keyboard.yPos);
+            drawKeyboard(19 + tmpManK, gamePlayVars.keyboard.yPos);
             break;
 
     }
@@ -381,10 +390,56 @@ void game() {
     }
 
 
+    // Draw man?
+
+    if (man_delay == 0) {
+
+        switch (tmpManP) {
+
+            case 1:
+                FX::drawBitmap(2, 28, Man_Word_00, 0, dbmNormal);
+                break;
+
+            case 2:
+                FX::drawBitmap(2, 28, Man_Word_01, 0, dbmNormal);
+                break;
+
+        }
+
+        switch (tmpManB) {
+
+            case 1:
+                FX::drawBitmap(tmpManX - 16, 36, LightBulb, 0, dbmNormal);
+                break;
+
+        }
+
+        FX::drawBitmap(tmpManX - 16, 45, Images::Man[tmpManI], 0, dbmNormal);
+
+    }
+
 
     // Housekeeping ..
 
     if (gamePlayVars.showInvalidWord_Count > 0 && arduboy.getFrameCount(2) == 0) gamePlayVars.showInvalidWord_Count--;
+
+    if (arduboy.getFrameCount(3) == 0) {
+
+        if (man_delay > 0) {
+            man_delay--;
+
+            if (man_delay == 0) {
+                man_Idx = 0;
+            }
+        }
+        else {
+            man_Idx++;
+            if (man_Idx > 155) {
+                man_delay = random(50, 400);
+            }
+        }
+
+    }
 
 }
 
@@ -408,7 +463,7 @@ void drawSolution() {
 }
 
 
-void drawGuesses(int8_t yOffset) {
+void drawGuesses(uint8_t xOffset, int8_t yOffset) {
 
     for (uint8_t y = 0; y < gamePlayVars.guesses.yCursor + 1; y++) {
 
@@ -456,33 +511,33 @@ void drawGuesses(int8_t yOffset) {
 
                 case GuessState::Correct:
                     arduboy.setTextColor(BLACK);
-                    arduboy.fillRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
-                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
+                    arduboy.fillRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove + xOffset, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
+                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove + xOffset, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
                     arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     break;
 
                 case GuessState::WrongPosition:
                     arduboy.setTextColor(WHITE);
-                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
+                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove + xOffset, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
                     arduboy.print(gamePlayVars.guesses.chars[y][x]);
-                    arduboy.drawRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
+                    arduboy.drawRect(Constants::guess_Left + (x * Constants::guess_Spacing) + xMove + xOffset, y * Constants::guess_Spacing + yOffset + yMove[x], Constants::guess_Spacing - 2, Constants::guess_Spacing - 2);
                     break;
 
                 case GuessState::Dashed:
                     arduboy.setTextColor(WHITE);
-                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
+                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove + xOffset, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
                     arduboy.print(gamePlayVars.guesses.chars[y][x]);
-                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 1 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
-                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
-                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 5 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
-                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 7 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
-                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 9 + xMove, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
+                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 1 + xMove + xOffset, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
+                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove + xOffset, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
+                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 5 + xMove + xOffset, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
+                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 7 + xMove + xOffset, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
+                    arduboy.drawPixel(Constants::guess_Left + (x * Constants::guess_Spacing) + 9 + xMove + xOffset, ((y + 1) * Constants::guess_Spacing) - 2 + yOffset + yMove[x]);
                     break;
 
 
                 default:
                     arduboy.setTextColor(WHITE);
-                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
+                    arduboy.setCursor(Constants::guess_Left + (x * Constants::guess_Spacing) + 3 + xMove + xOffset, y * Constants::guess_Spacing + 2 + yOffset + yMove[x]);
                     arduboy.print(gamePlayVars.guesses.chars[y][x]);
                     break;
 

@@ -64,20 +64,20 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
         FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_W[27], 0, dbmWhite);
     }
 
-    arduboy.drawFastHLine(19, yOffset, 91);
-    arduboy.drawFastVLine(18, yOffset + 1, 50);
-    arduboy.drawFastVLine(110, yOffset + 1, 50);
+    arduboy.drawFastHLine(xOffset, yOffset, 91);
+    arduboy.drawFastVLine(xOffset - 1, yOffset + 1, 50);
+    arduboy.drawFastVLine(xOffset + 91, yOffset + 1, 50);
 
     switch (gamePlayVars.keyboard.state) {
 
         case KeyboardState::Showing:
         case KeyboardState::StartShowing:
-            FX::drawBitmap(105, yOffset - 4, Arrow_Up, 0, dbmWhite);
+            FX::drawBitmap(xOffset + 86, yOffset - 4, Arrow_Up, 0, dbmWhite);
             break;
 
         case KeyboardState::Hiding:
         case KeyboardState::StartHiding:
-            FX::drawBitmap(105, yOffset - 4, Arrow_Down, 0, dbmWhite);
+            FX::drawBitmap(xOffset + 86, yOffset - 4, Arrow_Down, 0, dbmWhite);
             break;
 
     }

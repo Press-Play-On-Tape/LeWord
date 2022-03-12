@@ -31,3 +31,4 @@ namespace Constants {
     constexpr uint16_t EEPROM_Max_Streak_FR = EEPROM_Current_Streak_FR + 2;
 
 };
+

@@ -192,4 +192,17 @@ namespace Images {
         TitleScreen_D_01, 
     };
 
+    constexpr uint24_t Man[] = { 
+        Man_Walk_L_00,
+        Man_Walk_L_01, 
+        Man_Walk_L_02, 
+        Man_Walk_R_00,
+        Man_Walk_R_01, 
+        Man_Walk_R_02, 
+        Man_Walk_R_03, 
+        Man_Thinking, 
+        Man_Word_00, 
+        Man_Word_01, 
+    };
+
 };

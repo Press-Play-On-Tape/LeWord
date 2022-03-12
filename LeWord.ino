@@ -15,6 +15,9 @@ GamePlayVars gamePlayVars;
 
 GameState gameState = GameState::SplashScreen_Init;
 
+uint16_t man_delay = random(50, 400);
+uint8_t man_Idx = 0;
+
 void setup() {
 
     arduboy.boot();
