@@ -6,8 +6,8 @@ using uint24_t = __uint24;
 
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
-constexpr uint16_t FX_DATA_PAGE  = 0xff26;
-constexpr uint24_t FX_DATA_BYTES = 55722;
+constexpr uint16_t FX_DATA_PAGE  = 0xff23;
+constexpr uint24_t FX_DATA_BYTES = 56564;
 
 constexpr uint24_t Keyboard_W_01 = 0x000000;
 constexpr uint24_t Keyboard_W_02 = 0x000018;
@@ -120,18 +120,21 @@ constexpr uint24_t TitleScreen_Y_09 = 0x001862;
 constexpr uint24_t Man_Walk_L_00 = 0x001884;
 constexpr uint24_t Man_Walk_L_01 = 0x0018A3;
 constexpr uint24_t Man_Walk_L_02 = 0x0018C2;
-constexpr uint24_t Man_Walk_R_00 = 0x0018E1;
-constexpr uint24_t Man_Walk_R_01 = 0x001900;
-constexpr uint24_t Man_Walk_R_02 = 0x00191F;
-constexpr uint24_t Man_Walk_R_03 = 0x00193E;
-constexpr uint24_t Man_Thinking = 0x00195D;
-constexpr uint24_t Man_Word_00 = 0x00197C;
-constexpr uint24_t Man_Word_01 = 0x001994;
-constexpr uint24_t LightBulb = 0x0019AC;
-constexpr uint24_t ManData = 0x0019C2;
-constexpr uint24_t English_AlphaMap = 0x001CCE;
-constexpr uint24_t French_AlphaMap = 0x002216;
-constexpr uint24_t English_Words = 0x00275E;
-constexpr uint24_t English_EndOfWordData = 0x0063C4;
-constexpr uint24_t French_Words = 0x0063C5;
-constexpr uint24_t French_EndOfWordData = 0x00D9A9;
+constexpr uint24_t Man_Walk_L_03 = 0x0018E1;
+constexpr uint24_t Man_Walk_R_00 = 0x001900;
+constexpr uint24_t Man_Walk_R_01 = 0x00191F;
+constexpr uint24_t Man_Walk_R_02 = 0x00193E;
+constexpr uint24_t Man_Walk_R_03 = 0x00195D;
+constexpr uint24_t Man_Thinking_R = 0x00197C;
+constexpr uint24_t Man_Thinking_L = 0x00199B;
+constexpr uint24_t Man_Word_00 = 0x0019BA;
+constexpr uint24_t Man_Word_01 = 0x0019D2;
+constexpr uint24_t LightBulb = 0x0019EA;
+constexpr uint24_t ManData_R = 0x001A00;
+constexpr uint24_t ManData_L = 0x001D0C;
+constexpr uint24_t English_AlphaMap = 0x002018;
+constexpr uint24_t French_AlphaMap = 0x002560;
+constexpr uint24_t English_Words = 0x002AA8;
+constexpr uint24_t English_EndOfWordData = 0x00670E;
+constexpr uint24_t French_Words = 0x00670F;
+constexpr uint24_t French_EndOfWordData = 0x00DCF3;

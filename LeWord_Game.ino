@@ -67,23 +67,38 @@ void game_Init() {
 }
 
 void game() {
-Serial.println(man_delay);
+
     uint8_t tmpManX = 0;
     uint8_t tmpManB = 0;
     uint8_t tmpManI = 0;
     uint8_t tmpManP = 0;
-    uint8_t tmpManK = 0;
+    int8_t tmpManK = 0;
 
 
     if (man_delay == 0) {
 
-        FX::seekData(static_cast<uint24_t>(ManData + (man_Idx * 5)));
-        tmpManX = FX::readPendingUInt8();
-        tmpManK = FX::readPendingUInt8();
-        tmpManB = FX::readPendingUInt8();
-        tmpManI = FX::readPendingUInt8();
-        tmpManP = FX::readPendingUInt8();
-        FX::readEnd();
+        if (man_Side == 0) {
+
+            FX::seekData(static_cast<uint24_t>(ManData_L + (man_Idx * 5)));
+            tmpManX = FX::readPendingUInt8();
+            tmpManK = FX::readPendingUInt8();
+            tmpManB = FX::readPendingUInt8();
+            tmpManI = FX::readPendingUInt8();
+            tmpManP = FX::readPendingUInt8();
+            FX::readEnd();
+
+        }
+        else {
+            
+            FX::seekData(static_cast<uint24_t>(ManData_R + (man_Idx * 5)));
+            tmpManX = FX::readPendingUInt8();
+            tmpManK = -FX::readPendingUInt8();
+            tmpManB = FX::readPendingUInt8();
+            tmpManI = FX::readPendingUInt8();
+            tmpManP = FX::readPendingUInt8();
+            FX::readEnd();
+
+        }
 
     }
 
@@ -397,11 +412,11 @@ Serial.println(man_delay);
         switch (tmpManP) {
 
             case 1:
-                FX::drawBitmap(2, 28, Man_Word_00, 0, dbmNormal);
+                FX::drawBitmap(man_Side == 0 ? 2 : 106 , 28, Man_Word_00, 0, dbmNormal);
                 break;
 
             case 2:
-                FX::drawBitmap(2, 28, Man_Word_01, 0, dbmNormal);
+                FX::drawBitmap(man_Side == 0 ? 2 : 106, 28, Man_Word_01, 0, dbmNormal);
                 break;
 
         }
@@ -409,12 +424,12 @@ Serial.println(man_delay);
         switch (tmpManB) {
 
             case 1:
-                FX::drawBitmap(tmpManX - 16, 36, LightBulb, 0, dbmNormal);
+                FX::drawBitmap(man_Side == 0 ? tmpManX - 16 : 136 - tmpManX, 36, LightBulb, 0, dbmNormal);
                 break;
 
         }
 
-        FX::drawBitmap(tmpManX - 16, 45, Images::Man[tmpManI], 0, dbmNormal);
+        FX::drawBitmap(man_Side == 0 ? tmpManX - 16: 136 - tmpManX, 45, Images::Man[tmpManI], 0, dbmNormal);
 
     }
 
@@ -436,6 +451,7 @@ Serial.println(man_delay);
             man_Idx++;
             if (man_Idx > 155) {
                 man_delay = random(50, 400);
+                man_Side = random(0, 2);
             }
         }
 

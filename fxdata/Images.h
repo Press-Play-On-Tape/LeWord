@@ -193,16 +193,19 @@ namespace Images {
     };
 
     constexpr uint24_t Man[] = { 
-        Man_Walk_L_00,
+        Man_Walk_L_00,  // 0
         Man_Walk_L_01, 
-        Man_Walk_L_02, 
+        Man_Walk_L_02,  // 2
         Man_Walk_R_00,
-        Man_Walk_R_01, 
+        Man_Walk_R_01,  // 4
         Man_Walk_R_02, 
-        Man_Walk_R_03, 
-        Man_Thinking, 
-        Man_Word_00, 
+        Man_Walk_R_03,  // 6
+        Man_Thinking_R, 
+        Man_Word_00,    // 8
         Man_Word_01, 
+        Man_Walk_L_03, // 10
+        Man_Thinking_L, 
+
     };
 
 };
