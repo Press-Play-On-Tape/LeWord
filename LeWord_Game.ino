@@ -479,7 +479,7 @@ void drawSolution() {
 }
 
 
-void drawGuesses(uint8_t xOffset, int8_t yOffset) {
+void drawGuesses(int8_t xOffset, int8_t yOffset) {
 
     for (uint8_t y = 0; y < gamePlayVars.guesses.yCursor + 1; y++) {
 
