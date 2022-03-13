@@ -205,7 +205,11 @@ namespace Images {
         Man_Word_01, 
         Man_Walk_L_03, // 10
         Man_Thinking_L, 
+    };
 
+    constexpr uint24_t Man_Word[] = { 
+        Man_Word_00,
+        Man_Word_01, 
     };
 
 };

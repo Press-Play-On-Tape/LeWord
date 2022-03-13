@@ -15,9 +15,9 @@ GamePlayVars gamePlayVars;
 
 GameState gameState = GameState::SplashScreen_Init;
 
-uint16_t man_delay = random(50, 400);
+uint16_t man_delay = random(Constants::Delay_Low, Constants::Delay_High);
 uint8_t man_Idx = 0;
-uint8_t man_Side = 1;
+AnimationSequence animation = AnimationSequence::Walk_RL;
 
 void setup() {
 

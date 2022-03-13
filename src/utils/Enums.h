@@ -16,6 +16,13 @@ enum GameMode : uint8_t {
     French,
 };
 
+enum AnimationSequence : uint8_t {
+	Think_L,
+    Think_R,
+    Walk_LR,
+    Walk_RL,
+};
+
 enum class Direction : uint8_t {
     Up,
     Down,

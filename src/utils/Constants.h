@@ -30,5 +30,8 @@ namespace Constants {
     constexpr uint16_t EEPROM_Current_Streak_FR = EEPROM_Games_Played_FR + 2;
     constexpr uint16_t EEPROM_Max_Streak_FR = EEPROM_Current_Streak_FR + 2;
 
+    constexpr uint16_t Delay_Low = 400;
+    constexpr uint16_t Delay_High = 1500;
+
 };
 

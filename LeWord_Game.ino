@@ -25,8 +25,8 @@ void game_Init() {
                 {
                     while (true) {
 
-                        uint24_t numberOfWords = (English_EndOfWordData - English_Words) / 6;
-                        FX::seekData(English_Words + (random(0, numberOfWords) * 6));
+                        uint24_t numberOfWords = (Dictionary::English_EndOfWordData - Dictionary::English_Words) / 6;
+                        FX::seekData(Dictionary::English_Words + (random(0, numberOfWords) * 6));
                         uint8_t status = FX::readPendingUInt8();
 
                         for (uint8_t i = 0; i < 5; i++) {
@@ -43,18 +43,14 @@ void game_Init() {
 
             case GameMode::French:
                 {
-                    uint24_t numberOfWords = (French_EndOfWordData - French_Words) / 6;
-
-                    FX::seekData(French_Words + (random(0, numberOfWords) * 6));
+                    uint24_t numberOfWords = (Dictionary::French_EndOfWordData - Dictionary::French_Words) / 6;
+                    FX::seekData(Dictionary::French_Words + (random(0, numberOfWords) * 6));
 
                     uint8_t status = FX::readPendingUInt8();
 
                     for (uint8_t i = 0; i < 5; i++) {
                         gamePlayVars.selectedWord[i] = FX::readPendingUInt8();
-                    //Serial.print(gamePlayVars.selectedWord[i]);
-                    // Serial.print(" ");
                     }
-                    // Serial.println("");
 
                     FX::readEnd();
                 }
@@ -77,26 +73,47 @@ void game() {
 
     if (man_delay == 0) {
 
-        if (man_Side == 0) {
+        switch (animation) {
 
-            FX::seekData(static_cast<uint24_t>(ManData_L + (man_Idx * 5)));
-            tmpManX = FX::readPendingUInt8();
-            tmpManK = FX::readPendingUInt8();
-            tmpManB = FX::readPendingUInt8();
-            tmpManI = FX::readPendingUInt8();
-            tmpManP = FX::readPendingUInt8();
-            FX::readEnd();
+            case AnimationSequence::Think_L:
 
-        }
-        else {
-            
-            FX::seekData(static_cast<uint24_t>(ManData_R + (man_Idx * 5)));
-            tmpManX = FX::readPendingUInt8();
-            tmpManK = -FX::readPendingUInt8();
-            tmpManB = FX::readPendingUInt8();
-            tmpManI = FX::readPendingUInt8();
-            tmpManP = FX::readPendingUInt8();
-            FX::readEnd();
+                FX::seekData(static_cast<uint24_t>(Animation::ManData_L + (man_Idx * 5)));
+                tmpManX = FX::readPendingUInt8();
+                tmpManK = FX::readPendingUInt8();
+                tmpManB = FX::readPendingUInt8();
+                tmpManI = FX::readPendingUInt8();
+                tmpManP = FX::readPendingUInt8();
+                FX::readEnd();
+                break;
+
+            case AnimationSequence::Think_R: 
+                
+                FX::seekData(static_cast<uint24_t>(Animation::ManData_R + (man_Idx * 5)));
+                tmpManX = FX::readPendingUInt8();
+                tmpManK = -FX::readPendingUInt8();
+                tmpManB = FX::readPendingUInt8();
+                tmpManI = FX::readPendingUInt8();
+                tmpManP = FX::readPendingUInt8();
+                FX::readEnd();
+                break;
+
+            case AnimationSequence::Walk_LR: 
+
+                tmpManX = man_Idx;
+                tmpManK = 0;
+                tmpManB = 0;
+                tmpManI = ((man_Idx % 6) / 2) + 3;
+                tmpManP = 0;
+                break;
+
+            case AnimationSequence::Walk_RL: 
+
+                tmpManX = 128 + 16 - man_Idx;
+                tmpManK = 0;
+                tmpManB = 0;
+                tmpManI = ((man_Idx % 6) / 2);
+                tmpManP = 0;
+                break;
 
         }
 
@@ -256,38 +273,57 @@ void game() {
                 }
                 else if (gamePlayVars.keyboard.xCursor == 8 && gamePlayVars.keyboard.yCursor == 2) {
 
-                    gamePlayVars.checkState = checkWord();
+                    // Are there any spaces?
 
-                    switch (gamePlayVars.checkState) {
+                    bool hasSpace = false;
 
-                        case CheckState::CorrectWord:
-                            gamePlayVars.showInvalidWord_Count = 19;
+                    for (uint8_t i = 0; i < 5; i++) {
+
+                        if (gamePlayVars.guesses.chars[gamePlayVars.guesses.yCursor][i] == ' ') {
+
+                            hasSpace = true;
                             break;
 
-                        case CheckState::InvalidWord:
-                            gamePlayVars.showInvalidWord_Count = 15;
-                            break;
+                        }
 
-                        case CheckState::RealWord:
+                    }
 
-                            if (gamePlayVars.guesses.yCursor == 5) {
+                    if (!hasSpace) {
 
-                                gamePlayVars.checkState = CheckState::TooManyAttempts;
+                        gamePlayVars.checkState = checkWord();
 
-                            }
-                            else {
-                                
-                                gamePlayVars.guesses.xCursor = 0;
-                                gamePlayVars.guesses.yCursor = gamePlayVars.guesses.yCursor + 1;
+                        switch (gamePlayVars.checkState) {
 
-                                if (gamePlayVars.guesses.yCursor >= 2) {
-                                    gamePlayVars.guesses.listY = -((gamePlayVars.guesses.yCursor - 1) * Constants::guess_Spacing);
+                            case CheckState::CorrectWord:
+                                gamePlayVars.showInvalidWord_Count = 19;
+                                break;
+
+                            case CheckState::InvalidWord:
+                                gamePlayVars.showInvalidWord_Count = 15;
+                                break;
+
+                            case CheckState::RealWord:
+
+                                if (gamePlayVars.guesses.yCursor == 5) {
+
+                                    gamePlayVars.checkState = CheckState::TooManyAttempts;
+
                                 }
+                                else {
+                                    
+                                    gamePlayVars.guesses.xCursor = 0;
+                                    gamePlayVars.guesses.yCursor = gamePlayVars.guesses.yCursor + 1;
 
-                            }
-                            break;
+                                    if (gamePlayVars.guesses.yCursor >= 2) {
+                                        gamePlayVars.guesses.listY = -((gamePlayVars.guesses.yCursor - 1) * Constants::guess_Spacing);
+                                    }
 
-                        default: break;
+                                }
+                                break;
+
+                            default: break;
+
+                        }
 
                     }
 
@@ -325,46 +361,46 @@ void game() {
 
     }
 
-
+    drawMan(tmpManX, tmpManB, tmpManI, tmpManP, tmpManK);
     drawGuesses(tmpManK, gamePlayVars.guesses.listY);
 
     switch (gamePlayVars.checkState) {
 
         case CheckState::InvalidWord:
             if (gamePlayVars.mode == GameMode::English) {
-                FX::drawBitmap(23, 48, InvalidWord_EN, 0, dbmNormal);
+                FX::drawBitmap(23, 48, Images::InvalidWord_EN, 0, dbmNormal);
             }
             else {
-                FX::drawBitmap(5, 48, InvalidWord_FR, 0, dbmNormal);
+                FX::drawBitmap(5, 48, Images::InvalidWord_FR, 0, dbmNormal);
             }
             break;
 
         case CheckState::CorrectWord:
             if (gamePlayVars.mode == GameMode::English) {
-                FX::drawBitmap(41, 48, Correct_EN, 0, dbmNormal);
+                FX::drawBitmap(41, 48, Images::Correct_EN, 0, dbmNormal);
             }
             else {
-                FX::drawBitmap(41, 48, Correct_FR, 0, dbmNormal);
+                FX::drawBitmap(41, 48, Images::Correct_FR, 0, dbmNormal);
             }
             break;
 
         case CheckState::TooManyAttempts:
             drawSolution();
             if (gamePlayVars.mode == GameMode::English) {
-                FX::drawBitmap(18, 37, TooManyAttempts_EN, 0, dbmNormal);
+                FX::drawBitmap(18, 37, Images::TooManyAttempts_EN, 0, dbmNormal);
             }
             else {
-                FX::drawBitmap(10, 37, TooManyAttempts_FR, 0, dbmNormal);
+                FX::drawBitmap(10, 37, Images::TooManyAttempts_FR, 0, dbmNormal);
             }
             break;
 
         case CheckState::Quit:
             arduboy.fillRect(0, 35, WIDTH, 32, BLACK);
             if (gamePlayVars.mode == GameMode::English) {
-                FX::drawBitmap(29, 37, Quit_EN, 0, dbmNormal);
+                FX::drawBitmap(29, 37, Images::Quit_EN, 0, dbmNormal);
             }
             else {
-                FX::drawBitmap(32, 37, Quit_FR, 0, dbmNormal);
+                FX::drawBitmap(32, 37, Images::Quit_FR, 0, dbmNormal);
             }
             drawSolution();
             break;
@@ -405,34 +441,6 @@ void game() {
     }
 
 
-    // Draw man?
-
-    if (man_delay == 0) {
-
-        switch (tmpManP) {
-
-            case 1:
-                FX::drawBitmap(man_Side == 0 ? 2 : 106 , 28, Man_Word_00, 0, dbmNormal);
-                break;
-
-            case 2:
-                FX::drawBitmap(man_Side == 0 ? 2 : 106, 28, Man_Word_01, 0, dbmNormal);
-                break;
-
-        }
-
-        switch (tmpManB) {
-
-            case 1:
-                FX::drawBitmap(man_Side == 0 ? tmpManX - 16 : 136 - tmpManX, 36, LightBulb, 0, dbmNormal);
-                break;
-
-        }
-
-        FX::drawBitmap(man_Side == 0 ? tmpManX - 16: 136 - tmpManX, 45, Images::Man[tmpManI], 0, dbmNormal);
-
-    }
-
 
     // Housekeeping ..
 
@@ -448,11 +456,52 @@ void game() {
             }
         }
         else {
-            man_Idx++;
-            if (man_Idx > 155) {
-                man_delay = random(50, 400);
-                man_Side = random(0, 2);
+
+            switch (animation) {
+
+                case AnimationSequence::Think_L:
+
+                    man_Idx++;
+                    if (man_Idx > 155) {
+                        man_delay = random(Constants::Delay_Low, Constants::Delay_High);
+                        animation = AnimationSequence::Walk_LR;
+                    }
+
+                    break;
+
+                case AnimationSequence::Think_R:
+
+                    man_Idx++;
+                    if (man_Idx > 155) {
+                        man_delay = random(Constants::Delay_Low, Constants::Delay_High);
+                        animation = AnimationSequence::Walk_RL;
+                    }
+
+                    break;
+
+                case AnimationSequence::Walk_LR:
+
+                    man_Idx++;
+                    if (man_Idx > 128 + 16) {
+                        man_delay = random(Constants::Delay_Low, Constants::Delay_High);
+                        animation = AnimationSequence::Think_R;
+                    }
+
+                    break;
+
+                case AnimationSequence::Walk_RL:
+
+                    man_Idx++;
+                    if (man_Idx > 128 + 16) {
+                        man_delay = random(Constants::Delay_Low, Constants::Delay_High);
+                        animation = AnimationSequence::Think_L;
+                    }
+
+                    break;
+
+
             }
+
         }
 
     }
@@ -567,3 +616,57 @@ void drawGuesses(int8_t xOffset, int8_t yOffset) {
 
 }
 
+
+void drawMan(uint8_t tmpManX, uint8_t tmpManB, uint8_t tmpManI, uint8_t tmpManP, int8_t tmpManK) {
+
+
+    // Draw man?
+
+    if (man_delay == 0) {
+
+        switch (animation) {
+
+            case AnimationSequence::Think_L:
+
+                if (tmpManP > 0) {
+                    FX::drawBitmap(2, 28, Images::Man_Word[tmpManP - 1], 0, dbmNormal);
+                }
+
+                switch (tmpManB) {
+
+                    case 1:
+                        FX::drawBitmap(tmpManX - 16, 36, Images::LightBulb, 0, dbmNormal);
+                        break;
+
+                }
+
+                FX::drawBitmap(tmpManX - 16, 45, Images::Man[tmpManI], 0, dbmNormal); 
+                break;
+
+            case AnimationSequence::Think_R:
+                
+                if (tmpManP > 0) {
+                    FX::drawBitmap(106, 28, Images::Man_Word[tmpManP - 1], 0, dbmNormal);
+                }
+
+                switch (tmpManB) {
+
+                    case 1:
+                        FX::drawBitmap(136 - tmpManX, 36, Images::LightBulb, 0, dbmNormal);
+                        break;
+
+                }
+
+                FX::drawBitmap(136 - tmpManX, 45, Images::Man[tmpManI], 0, dbmNormal);
+                break;
+        
+            case AnimationSequence::Walk_LR:
+            case AnimationSequence::Walk_RL:
+                FX::drawBitmap(tmpManX - 16, 45, Images::Man[tmpManI], 0, dbmNormal); 
+                break;
+
+        }
+
+    }
+
+}

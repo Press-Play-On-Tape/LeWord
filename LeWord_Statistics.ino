@@ -63,10 +63,10 @@ void statistics() {
     }
 
     if (gamePlayVars.mode == GameMode::English) {
-        FX::drawBitmap(0, 0, Statistics_EN, 0, dbmNormal);
+        FX::drawBitmap(0, 0, Images::Statistics_EN, 0, dbmNormal);
     }
     else {
-        FX::drawBitmap(0, 0, Statistics_FR, 0, dbmNormal);
+        FX::drawBitmap(0, 0, Images::Statistics_FR, 0, dbmNormal);
     }
 
     arduboy.setCursor(31, 14);

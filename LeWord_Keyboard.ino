@@ -11,6 +11,8 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
     constexpr uint8_t key_Width = 10;
     constexpr uint8_t key_Height = 11;
 
+    arduboy.fillRect(xOffset - 1, yOffset + 1, 93, 50, BLACK);
+
     for (uint8_t i = 0; i < 26; i++) {
 
         uint8_t xPos = key_PosX[i] - 1;
@@ -24,10 +26,10 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
             FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B[i], 0, dbmWhite);
 
             if (gamePlayVars.keyboard.keys[Constants::key_Map[gamePlayVars.keyboard.yCursor][gamePlayVars.keyboard.xCursor]] != KeyState::Invisible) {
-                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Keyboard_B_Cursor, 0, dbmMasked);
+                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B_Cursor, 0, dbmMasked);
             }
             else {
-                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Keyboard_B_Cursor_Half, 0, dbmMasked);
+                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B_Cursor_Half, 0, dbmMasked);
             }
 
         }
@@ -72,12 +74,12 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
 
         case KeyboardState::Showing:
         case KeyboardState::StartShowing:
-            FX::drawBitmap(xOffset + 86, yOffset - 4, Arrow_Up, 0, dbmWhite);
+            FX::drawBitmap(xOffset + 86, yOffset - 4, Images::Arrow_Up, 0, dbmWhite);
             break;
 
         case KeyboardState::Hiding:
         case KeyboardState::StartHiding:
-            FX::drawBitmap(xOffset + 86, yOffset - 4, Arrow_Down, 0, dbmWhite);
+            FX::drawBitmap(xOffset + 86, yOffset - 4, Images::Arrow_Down, 0, dbmWhite);
             break;
 
     }

@@ -67,8 +67,8 @@ void title() {
     FX::drawBitmap(82, 11, Images::TitleScreen_R[indexes[4]], 0, dbmWhite);
     FX::drawBitmap(99, 11, Images::TitleScreen_D[indexes[5]], 0, dbmWhite);
 
-    FX::drawBitmap(0, 29, TitleScreen_Lower, 0, dbmWhite);
-    FX::drawBitmap(gamePlayVars.mode == GameMode::English ? 16 : 74, 47, Pointer, 0, dbmWhite);
+    FX::drawBitmap(0, 29, Images::TitleScreen_Lower, 0, dbmWhite);
+    FX::drawBitmap(gamePlayVars.mode == GameMode::English ? 16 : 74, 47, Images::Pointer, 0, dbmWhite);
 
     if (titleScreenVars.frameIndex > 0) {
     

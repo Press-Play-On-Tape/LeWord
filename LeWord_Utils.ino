@@ -181,10 +181,10 @@ CheckState checkWord() {
         case GameMode::English:
             {
                 uint24_t startPos = ((guessWord[0] - 65) * 26) + (guessWord[1] - 65);
-                FX::seekData(English_AlphaMap + (startPos * 2));
+                FX::seekData(Dictionary::English_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
-                FX::seekData(English_Words + (alphaStart * 6));
+                FX::seekData(Dictionary::English_Words + (alphaStart * 6));
 
             }
             break;
@@ -192,10 +192,10 @@ CheckState checkWord() {
         case GameMode::French:
             {
                 uint24_t startPos = ((guessWord[0] - 65) * 26) + (guessWord[1] - 65);
-                FX::seekData(French_AlphaMap + (startPos * 2));
+                FX::seekData(Dictionary::French_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
-                FX::seekData(French_Words + (alphaStart * 6));
+                FX::seekData(Dictionary::French_Words + (alphaStart * 6));
 
             }
             break;
