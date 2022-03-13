@@ -3095,7 +3095,7 @@ uint8_t English_Words[] = {
 1,90,79,87,73,69
 };
 
-uint8_t English_EndOfWordData = 0;
+uint8_t English_EndOfWordData = .;
 
 uint8_t French_Words[] = {
 1,65,66,65,67,65,
@@ -8130,7 +8130,7 @@ uint8_t French_Words[] = {
 1,90,85,77,66,65,
 };
 
-uint8_t French_EndOfWordData = 0;
+uint8_t French_EndOfWordData = .;
 
 };
 namespace_end
