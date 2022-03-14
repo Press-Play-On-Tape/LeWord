@@ -23,7 +23,7 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
 
         if (xPos == gamePlayVars.keyboard.xCursor && yPos == gamePlayVars.keyboard.yCursor && gamePlayVars.keyboard.state == KeyboardState::Showing) {
 
-            FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B[i], 0, dbmWhite);
+            FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B, i, dbmWhite);
 
             if (gamePlayVars.keyboard.keys[Constants::key_Map[gamePlayVars.keyboard.yCursor][gamePlayVars.keyboard.xCursor]] != KeyState::Invisible) {
                 FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B_Cursor, 0, dbmMasked);
@@ -36,10 +36,10 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
         else {
 
             if (gamePlayVars.keyboard.keys[i] == KeyState::Visible) {
-                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_W[i], 0, dbmWhite);
+                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_W, i, dbmWhite);
             }
             else {
-                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B[i], 0, dbmWhite);
+                FX::drawBitmap(x + xOffset, y + 1 + yOffset, Images::Keyboard_B, i, dbmWhite);
             }
 
         }
@@ -50,20 +50,20 @@ void drawKeyboard(uint8_t xOffset, uint8_t yOffset) {
     // Delete key ..
 
     if (gamePlayVars.keyboard.xCursor == 0 && gamePlayVars.keyboard.yCursor == 2) {
-        FX::drawBitmap(xOffset, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B[26], 0, dbmWhite);
+        FX::drawBitmap(xOffset, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B_BackSpace, 0, dbmWhite);
     }
     else {
-        FX::drawBitmap(xOffset, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_W[26], 0, dbmWhite);
+        FX::drawBitmap(xOffset, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_W_BackSpace, 0, dbmWhite);
     }
 
 
     // Enter Key ..
 
     if (gamePlayVars.keyboard.xCursor == 8 && gamePlayVars.keyboard.yCursor == 2) {
-        FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B[27], 0, dbmWhite);
+        FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_B_Enter, 0, dbmWhite);
     }
     else {
-        FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_W[27], 0, dbmWhite);
+        FX::drawBitmap(7 * (key_Width - 1) + (key_Width - 1) + xOffset + 2, 2 * (key_Height - 1) + 1 + yOffset, Images::Keyboard_W_Enter, 0, dbmWhite);
     }
 
     arduboy.drawFastHLine(xOffset, yOffset, 91);
