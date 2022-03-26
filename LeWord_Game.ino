@@ -148,7 +148,8 @@ void game() {
 
         case CheckState::CorrectWord:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
-                EEPROM_Utils::increaseCorrectWords(gamePlayVars.mode);
+                EEPROM_Utils::increaseCorrectWords(gamePlayVars.mode, gamePlayVars.guesses.yCursor);
+                statisticsScreenVars.numberOfAttempts = gamePlayVars.guesses.yCursor + 1;
                 gameState = GameState::Stats_Init;
             }
             break;
@@ -163,6 +164,7 @@ void game() {
         case CheckState::Quit:
             if (arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)) {
                 if (gamePlayVars.guesses.yCursor > 0) EEPROM_Utils::resetWiningStreak(gamePlayVars.mode);
+                statisticsScreenVars.numberOfAttempts = 7;
                 gameState = GameState::Stats_Init;
             }
             break;

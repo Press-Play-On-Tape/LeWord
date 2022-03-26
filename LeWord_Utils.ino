@@ -322,5 +322,3 @@ CheckState checkWord() {
     FX::readEnd();
 
 }
-
-

@@ -19,11 +19,16 @@ namespace Images {
     image_t TooManyAttempts_FR = "TooManyAttempts_FR.png"
     image_t Quit_EN = "Quit_EN.png"
     image_t Quit_FR = "Quit_FR.png"
-    image_t Statistics_EN = "Statistics_EN.png"
-    image_t Statistics_FR = "Statistics_FR.png"
     image_t Pointer = "Pointer.png"
     image_t Arrow_Up = "Arrow_Up.png"
     image_t Arrow_Down = "Arrow_Down.png"
+
+    image_t Statistics_Header_EN = "statistics/Statistics_Header_EN.png"
+    image_t Statistics_Header_FR = "statistics/Statistics_Header_FR.png"
+    image_t Statistics_EN = "statistics/Statistics_EN.png"
+    image_t Statistics_FR = "statistics/Statistics_FR.png"
+    image_t Statistics_Vert = "statistics/Statistics_Vert.png"
+    image_t Numbers3x5 = "numbers/Numbers_3x5_1.png"
 
     image_t TitleScreen_Lower = "title/TitleScreen_Lower.png"
     image_t TitleScreen_L_00 = "title/TitleScreen_L_00.png"

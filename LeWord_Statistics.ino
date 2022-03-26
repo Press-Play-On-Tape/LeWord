@@ -2,6 +2,7 @@
 
 void statistics_Init() {
 
+    statisticsScreenVars.reset();
     gameState = GameState::Stats;
 
 }
@@ -38,8 +39,18 @@ void statistics() {
     percent = (gamesPlayed == 0 ? 0 : (gamesWon * 100) / gamesPlayed);
 
     if (arduboy.justPressed(A_BUTTON)) {
-        
-        gameState = GameState::Title_Init; 
+                
+        switch (statisticsScreenVars.mode) {
+
+            case StatisticsMode::PageOne:
+                statisticsScreenVars.mode = StatisticsMode::PageTwo;
+                break;
+
+            case StatisticsMode::PageTwo:
+                gameState = GameState::Title_Init; 
+                break;
+
+        }
 
     }
 
@@ -62,31 +73,112 @@ void statistics() {
 
     }
 
-    if (gamePlayVars.mode == GameMode::English) {
-        FX::drawBitmap(0, 0, Images::Statistics_EN, 0, dbmNormal);
+
+    switch (statisticsScreenVars.mode) {
+
+        case StatisticsMode::PageOne:
+
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(0, 0, Images::Statistics_Header_EN, 0, dbmNormal);
+                FX::drawBitmap(0, 8, Images::Statistics_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(0, 0, Images::Statistics_Header_FR, 0, dbmNormal);
+                FX::drawBitmap(0, 8, Images::Statistics_FR, 0, dbmNormal);
+            }
+
+            arduboy.setCursor(31, 14);
+            if (gamesPlayed < 100) { arduboy.print("0"); }
+            if (gamesPlayed < 10)  { arduboy.print("0"); }
+            arduboy.print(gamesPlayed);
+
+            arduboy.setCursor(84, 14);
+            if (percent < 100) { arduboy.print("0"); }
+            if (percent < 10)  { arduboy.print("0"); }
+            arduboy.print(percent);
+
+            arduboy.setCursor(31, 39);
+            if (currentStreak < 100) { arduboy.print("0"); }
+            if (currentStreak < 10)  { arduboy.print("0"); }
+            arduboy.print(currentStreak);
+
+            arduboy.setCursor(84, 39);
+            if (maxStreak < 100) { arduboy.print("0"); }
+            if (maxStreak < 10)  { arduboy.print("0"); }
+            arduboy.print(maxStreak);
+
+            break;
+
+        case StatisticsMode::PageTwo:
+
+            if (gamePlayVars.mode == GameMode::English) {
+                FX::drawBitmap(0, 0, Images::Statistics_Header_EN, 0, dbmNormal);
+            }
+            else {
+                FX::drawBitmap(0, 0, Images::Statistics_Header_FR, 0, dbmNormal);
+            }
+
+            FX::drawBitmap(0, 8, Images::Statistics_Vert, 0, dbmNormal);
+
+            for (uint8_t i = 0; i < 6; i++) {
+
+                uint8_t width = EEPROM_Utils::getPercent(gamePlayVars.mode, i);
+                uint16_t val = EEPROM_Utils::getPercentVal(gamePlayVars.mode, i);
+                uint8_t textWidth = widthOfNumber(val);
+
+                if (val != 0 && textWidth > width) width = textWidth + 1;
+
+                if (i + 1 == statisticsScreenVars.numberOfAttempts) {
+                    arduboy.drawRect(12, 15 + (i * 8), width == 0 ? 1 : width, 7);
+                }
+                else {
+                    arduboy.fillRect(12, 15 + (i * 8), width == 0 ? 1 : width, 7);
+                }
+
+
+                if (val > 0) {
+
+                    uint8_t digits[5];
+                    extractDigits(digits, val);
+                    bool firstDigitRendered = false;
+
+                    for (int8_t j = 4; j >= 0; j--) {
+
+                        if (digits[j] != 0 || firstDigitRendered) {
+
+                            if (i + 1 == statisticsScreenVars.numberOfAttempts) {
+                                if (arduboy.getFrameCountHalf(32)) {
+                                    FX::drawBitmap(12 + width - (j * 4) - 5, 16 + (i * 8), Images::Numbers3x5, digits[j], dbmNormal);
+                                }
+                            }
+                            else {
+                                FX::drawBitmap(12 + width - (j * 4) - 5, 16 + (i * 8), Images::Numbers3x5, digits[j], dbmReverse);
+                            }
+
+                            firstDigitRendered = true;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            break;
+
     }
-    else {
-        FX::drawBitmap(0, 0, Images::Statistics_FR, 0, dbmNormal);
-    }
 
-    arduboy.setCursor(31, 14);
-    if (gamesPlayed < 100) { arduboy.print("0"); }
-    if (gamesPlayed < 10)  { arduboy.print("0"); }
-    arduboy.print(gamesPlayed);
+    
+}
 
-    arduboy.setCursor(84, 14);
-    if (percent < 100) { arduboy.print("0"); }
-    if (percent < 10)  { arduboy.print("0"); }
-    arduboy.print(percent);
+uint8_t widthOfNumber(uint16_t number) {
 
-    arduboy.setCursor(31, 39);
-    if (currentStreak < 100) { arduboy.print("0"); }
-    if (currentStreak < 10)  { arduboy.print("0"); }
-    arduboy.print(currentStreak);
-
-    arduboy.setCursor(84, 39);
-    if (maxStreak < 100) { arduboy.print("0"); }
-    if (maxStreak < 10)  { arduboy.print("0"); }
-    arduboy.print(maxStreak);
+    if (number >= 10000) return 5 * 4 + 2;
+    if (number >= 1000) return 4 * 4 + 2;
+    if (number >= 100) return 3 * 4 + 2;
+    if (number >= 10) return 2 * 4 + 2;
+    if (number >= 1) return 1 * 4 + 2;
+    return 0;
 
 }

@@ -11,6 +11,7 @@
 
 Arduboy2Ext arduboy;
 TitleScreenVars titleScreenVars;
+StatisticsScreenVars statisticsScreenVars;
 GamePlayVars gamePlayVars;
 
 GameState gameState = GameState::SplashScreen_Init;

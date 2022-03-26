@@ -1,6 +1,6 @@
 #pragma once
 
-#define _USE_BRINE
+#define USE_BRINE
 /* TEASE PRUNE DRONE CRIME BLINK and BRIEF or BRINE */
 
 namespace Constants {
@@ -29,6 +29,9 @@ namespace Constants {
     constexpr uint16_t EEPROM_Games_Played_FR = EEPROM_Games_Won_FR + 2;
     constexpr uint16_t EEPROM_Current_Streak_FR = EEPROM_Games_Played_FR + 2;
     constexpr uint16_t EEPROM_Max_Streak_FR = EEPROM_Current_Streak_FR + 2;
+    constexpr uint16_t EEPROM_Distribution_EN = EEPROM_Max_Streak_FR + 2;
+    constexpr uint16_t EEPROM_Distribution_FR = EEPROM_Distribution_EN + 12;
+
 
     constexpr uint16_t Delay_Low = 400;
     constexpr uint16_t Delay_High = 1500;

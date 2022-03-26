@@ -16,6 +16,19 @@ struct TitleScreenVars {
 
 };
 
+struct StatisticsScreenVars {
+
+    StatisticsMode mode = StatisticsMode::PageOne;
+    uint8_t numberOfAttempts = 0;
+    
+    void reset() {
+
+        this->mode = StatisticsMode::PageOne;
+
+    }
+
+};
+
 struct KeyboardVars {
 
     uint8_t xCursor = 0;

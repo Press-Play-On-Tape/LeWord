@@ -36,6 +36,7 @@ void title() {
 
     if (arduboy.justPressed(B_BUTTON)) {
         
+        statisticsScreenVars.numberOfAttempts = 7;
         gameState = GameState::Stats_Init; 
 
     }

@@ -7,7 +7,7 @@ using uint24_t = __uint24;
 // Initialize FX hardware using  FX::begin(FX_DATA_PAGE); in the setup() function.
 
 constexpr uint16_t FX_DATA_PAGE  = 0xff23;
-constexpr uint24_t FX_DATA_BYTES = 56362;
+constexpr uint24_t FX_DATA_BYTES = 56492;
 
 namespace Images
 {
@@ -77,223 +77,240 @@ namespace Images
   constexpr uint16_t Quit_FR_width  = 64;
   constexpr uint16_t Quit_FR_height = 8;
 
-  constexpr uint24_t Statistics_EN = 0x00084E;
-  constexpr uint16_t Statistics_EN_width  = 128;
-  constexpr uint16_t Statistics_EN_height = 64;
-
-  constexpr uint24_t Statistics_FR = 0x000C52;
-  constexpr uint16_t Statistics_FR_width  = 128;
-  constexpr uint16_t Statistics_FR_height = 64;
-
-  constexpr uint24_t Pointer = 0x001056;
+  constexpr uint24_t Pointer = 0x00084E;
   constexpr uint16_t PointerWidth  = 4;
   constexpr uint16_t PointerHeight = 5;
 
-  constexpr uint24_t Arrow_Up = 0x00105E;
+  constexpr uint24_t Arrow_Up = 0x000856;
   constexpr uint16_t Arrow_Up_width  = 5;
   constexpr uint16_t Arrow_Up_height = 3;
 
-  constexpr uint24_t Arrow_Down = 0x001067;
+  constexpr uint24_t Arrow_Down = 0x00085F;
   constexpr uint16_t Arrow_Down_width  = 5;
   constexpr uint16_t Arrow_Down_height = 3;
 
-  constexpr uint24_t TitleScreen_Lower = 0x001070;
+  constexpr uint24_t Statistics_Header_EN = 0x000868;
+  constexpr uint16_t Statistics_Header_EN_width  = 128;
+  constexpr uint16_t Statistics_Header_EN_height = 8;
+
+  constexpr uint24_t Statistics_Header_FR = 0x0008EC;
+  constexpr uint16_t Statistics_Header_FR_width  = 128;
+  constexpr uint16_t Statistics_Header_FR_height = 8;
+
+  constexpr uint24_t Statistics_EN = 0x000970;
+  constexpr uint16_t Statistics_EN_width  = 128;
+  constexpr uint16_t Statistics_EN_height = 56;
+
+  constexpr uint24_t Statistics_FR = 0x000CF4;
+  constexpr uint16_t Statistics_FR_width  = 128;
+  constexpr uint16_t Statistics_FR_height = 56;
+
+  constexpr uint24_t Statistics_Vert = 0x001078;
+  constexpr uint16_t Statistics_Vert_width  = 12;
+  constexpr uint16_t Statistics_Vert_height = 56;
+
+  constexpr uint24_t Numbers3x5 = 0x0010D0;
+  constexpr uint16_t Numbers3x5Width  = 3;
+  constexpr uint16_t Numbers3x5Height = 5;
+  constexpr uint8_t  Numbers3x5Frames = 10;
+
+  constexpr uint24_t TitleScreen_Lower = 0x0010F2;
   constexpr uint16_t TitleScreen_Lower_width  = 128;
   constexpr uint16_t TitleScreen_Lower_height = 35;
 
-  constexpr uint24_t TitleScreen_L_00 = 0x0012F4;
+  constexpr uint24_t TitleScreen_L_00 = 0x001376;
   constexpr uint16_t TitleScreen_L_00_width  = 15;
   constexpr uint16_t TitleScreen_L_00_height = 16;
 
-  constexpr uint24_t TitleScreen_L_01 = 0x001316;
+  constexpr uint24_t TitleScreen_L_01 = 0x001398;
   constexpr uint16_t TitleScreen_L_01_width  = 15;
   constexpr uint16_t TitleScreen_L_01_height = 16;
 
-  constexpr uint24_t TitleScreen_L_02 = 0x001338;
+  constexpr uint24_t TitleScreen_L_02 = 0x0013BA;
   constexpr uint16_t TitleScreen_L_02_width  = 15;
   constexpr uint16_t TitleScreen_L_02_height = 16;
 
-  constexpr uint24_t TitleScreen_L_03 = 0x00135A;
+  constexpr uint24_t TitleScreen_L_03 = 0x0013DC;
   constexpr uint16_t TitleScreen_L_03_width  = 15;
   constexpr uint16_t TitleScreen_L_03_height = 16;
 
-  constexpr uint24_t TitleScreen_E_00 = 0x00137C;
+  constexpr uint24_t TitleScreen_E_00 = 0x0013FE;
   constexpr uint16_t TitleScreen_E_00_width  = 15;
   constexpr uint16_t TitleScreen_E_00_height = 16;
 
-  constexpr uint24_t TitleScreen_E_01 = 0x00139E;
+  constexpr uint24_t TitleScreen_E_01 = 0x001420;
   constexpr uint16_t TitleScreen_E_01_width  = 15;
   constexpr uint16_t TitleScreen_E_01_height = 16;
 
-  constexpr uint24_t TitleScreen_E_02 = 0x0013C0;
+  constexpr uint24_t TitleScreen_E_02 = 0x001442;
   constexpr uint16_t TitleScreen_E_02_width  = 15;
   constexpr uint16_t TitleScreen_E_02_height = 16;
 
-  constexpr uint24_t TitleScreen_E_03 = 0x0013E2;
+  constexpr uint24_t TitleScreen_E_03 = 0x001464;
   constexpr uint16_t TitleScreen_E_03_width  = 15;
   constexpr uint16_t TitleScreen_E_03_height = 16;
 
-  constexpr uint24_t TitleScreen_W_00 = 0x001404;
+  constexpr uint24_t TitleScreen_W_00 = 0x001486;
   constexpr uint16_t TitleScreen_W_00_width  = 15;
   constexpr uint16_t TitleScreen_W_00_height = 16;
 
-  constexpr uint24_t TitleScreen_W_01 = 0x001426;
+  constexpr uint24_t TitleScreen_W_01 = 0x0014A8;
   constexpr uint16_t TitleScreen_W_01_width  = 15;
   constexpr uint16_t TitleScreen_W_01_height = 16;
 
-  constexpr uint24_t TitleScreen_W_02 = 0x001448;
+  constexpr uint24_t TitleScreen_W_02 = 0x0014CA;
   constexpr uint16_t TitleScreen_W_02_width  = 15;
   constexpr uint16_t TitleScreen_W_02_height = 16;
 
-  constexpr uint24_t TitleScreen_W_03 = 0x00146A;
+  constexpr uint24_t TitleScreen_W_03 = 0x0014EC;
   constexpr uint16_t TitleScreen_W_03_width  = 15;
   constexpr uint16_t TitleScreen_W_03_height = 16;
 
-  constexpr uint24_t TitleScreen_O_00 = 0x00148C;
+  constexpr uint24_t TitleScreen_O_00 = 0x00150E;
   constexpr uint16_t TitleScreen_O_00_width  = 15;
   constexpr uint16_t TitleScreen_O_00_height = 16;
 
-  constexpr uint24_t TitleScreen_O_01 = 0x0014AE;
+  constexpr uint24_t TitleScreen_O_01 = 0x001530;
   constexpr uint16_t TitleScreen_O_01_width  = 15;
   constexpr uint16_t TitleScreen_O_01_height = 16;
 
-  constexpr uint24_t TitleScreen_O_02 = 0x0014D0;
+  constexpr uint24_t TitleScreen_O_02 = 0x001552;
   constexpr uint16_t TitleScreen_O_02_width  = 15;
   constexpr uint16_t TitleScreen_O_02_height = 16;
 
-  constexpr uint24_t TitleScreen_O_03 = 0x0014F2;
+  constexpr uint24_t TitleScreen_O_03 = 0x001574;
   constexpr uint16_t TitleScreen_O_03_width  = 15;
   constexpr uint16_t TitleScreen_O_03_height = 16;
 
-  constexpr uint24_t TitleScreen_R_00 = 0x001514;
+  constexpr uint24_t TitleScreen_R_00 = 0x001596;
   constexpr uint16_t TitleScreen_R_00_width  = 15;
   constexpr uint16_t TitleScreen_R_00_height = 16;
 
-  constexpr uint24_t TitleScreen_R_01 = 0x001536;
+  constexpr uint24_t TitleScreen_R_01 = 0x0015B8;
   constexpr uint16_t TitleScreen_R_01_width  = 15;
   constexpr uint16_t TitleScreen_R_01_height = 16;
 
-  constexpr uint24_t TitleScreen_R_02 = 0x001558;
+  constexpr uint24_t TitleScreen_R_02 = 0x0015DA;
   constexpr uint16_t TitleScreen_R_02_width  = 15;
   constexpr uint16_t TitleScreen_R_02_height = 16;
 
-  constexpr uint24_t TitleScreen_R_03 = 0x00157A;
+  constexpr uint24_t TitleScreen_R_03 = 0x0015FC;
   constexpr uint16_t TitleScreen_R_03_width  = 15;
   constexpr uint16_t TitleScreen_R_03_height = 16;
 
-  constexpr uint24_t TitleScreen_D_00 = 0x00159C;
+  constexpr uint24_t TitleScreen_D_00 = 0x00161E;
   constexpr uint16_t TitleScreen_D_00_width  = 15;
   constexpr uint16_t TitleScreen_D_00_height = 16;
 
-  constexpr uint24_t TitleScreen_D_01 = 0x0015BE;
+  constexpr uint24_t TitleScreen_D_01 = 0x001640;
   constexpr uint16_t TitleScreen_D_01_width  = 15;
   constexpr uint16_t TitleScreen_D_01_height = 16;
 
-  constexpr uint24_t TitleScreen_D_02 = 0x0015E0;
+  constexpr uint24_t TitleScreen_D_02 = 0x001662;
   constexpr uint16_t TitleScreen_D_02_width  = 15;
   constexpr uint16_t TitleScreen_D_02_height = 16;
 
-  constexpr uint24_t TitleScreen_D_03 = 0x001602;
+  constexpr uint24_t TitleScreen_D_03 = 0x001684;
   constexpr uint16_t TitleScreen_D_03_width  = 15;
   constexpr uint16_t TitleScreen_D_03_height = 16;
 
-  constexpr uint24_t TitleScreen_X_04 = 0x001624;
+  constexpr uint24_t TitleScreen_X_04 = 0x0016A6;
   constexpr uint16_t TitleScreen_X_04_width  = 15;
   constexpr uint16_t TitleScreen_X_04_height = 16;
 
-  constexpr uint24_t TitleScreen_X_05 = 0x001646;
+  constexpr uint24_t TitleScreen_X_05 = 0x0016C8;
   constexpr uint16_t TitleScreen_X_05_width  = 15;
   constexpr uint16_t TitleScreen_X_05_height = 16;
 
-  constexpr uint24_t TitleScreen_X_06 = 0x001668;
+  constexpr uint24_t TitleScreen_X_06 = 0x0016EA;
   constexpr uint16_t TitleScreen_X_06_width  = 15;
   constexpr uint16_t TitleScreen_X_06_height = 16;
 
-  constexpr uint24_t TitleScreen_X_07 = 0x00168A;
+  constexpr uint24_t TitleScreen_X_07 = 0x00170C;
   constexpr uint16_t TitleScreen_X_07_width  = 15;
   constexpr uint16_t TitleScreen_X_07_height = 16;
 
-  constexpr uint24_t TitleScreen_X_08 = 0x0016AC;
+  constexpr uint24_t TitleScreen_X_08 = 0x00172E;
   constexpr uint16_t TitleScreen_X_08_width  = 15;
   constexpr uint16_t TitleScreen_X_08_height = 16;
 
-  constexpr uint24_t TitleScreen_X_09 = 0x0016CE;
+  constexpr uint24_t TitleScreen_X_09 = 0x001750;
   constexpr uint16_t TitleScreen_X_09_width  = 15;
   constexpr uint16_t TitleScreen_X_09_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_04 = 0x0016F0;
+  constexpr uint24_t TitleScreen_Y_04 = 0x001772;
   constexpr uint16_t TitleScreen_Y_04_width  = 15;
   constexpr uint16_t TitleScreen_Y_04_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_05 = 0x001712;
+  constexpr uint24_t TitleScreen_Y_05 = 0x001794;
   constexpr uint16_t TitleScreen_Y_05_width  = 15;
   constexpr uint16_t TitleScreen_Y_05_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_06 = 0x001734;
+  constexpr uint24_t TitleScreen_Y_06 = 0x0017B6;
   constexpr uint16_t TitleScreen_Y_06_width  = 15;
   constexpr uint16_t TitleScreen_Y_06_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_07 = 0x001756;
+  constexpr uint24_t TitleScreen_Y_07 = 0x0017D8;
   constexpr uint16_t TitleScreen_Y_07_width  = 15;
   constexpr uint16_t TitleScreen_Y_07_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_08 = 0x001778;
+  constexpr uint24_t TitleScreen_Y_08 = 0x0017FA;
   constexpr uint16_t TitleScreen_Y_08_width  = 15;
   constexpr uint16_t TitleScreen_Y_08_height = 16;
 
-  constexpr uint24_t TitleScreen_Y_09 = 0x00179A;
+  constexpr uint24_t TitleScreen_Y_09 = 0x00181C;
   constexpr uint16_t TitleScreen_Y_09_width  = 15;
   constexpr uint16_t TitleScreen_Y_09_height = 16;
 
-  constexpr uint24_t Man_Walk_L_00 = 0x0017BC;
+  constexpr uint24_t Man_Walk_L_00 = 0x00183E;
   constexpr uint16_t Man_Walk_L_00_width  = 9;
   constexpr uint16_t Man_Walk_L_00_height = 18;
 
-  constexpr uint24_t Man_Walk_L_01 = 0x0017DB;
+  constexpr uint24_t Man_Walk_L_01 = 0x00185D;
   constexpr uint16_t Man_Walk_L_01_width  = 9;
   constexpr uint16_t Man_Walk_L_01_height = 18;
 
-  constexpr uint24_t Man_Walk_L_02 = 0x0017FA;
+  constexpr uint24_t Man_Walk_L_02 = 0x00187C;
   constexpr uint16_t Man_Walk_L_02_width  = 9;
   constexpr uint16_t Man_Walk_L_02_height = 18;
 
-  constexpr uint24_t Man_Walk_L_03 = 0x001819;
+  constexpr uint24_t Man_Walk_L_03 = 0x00189B;
   constexpr uint16_t Man_Walk_L_03_width  = 9;
   constexpr uint16_t Man_Walk_L_03_height = 18;
 
-  constexpr uint24_t Man_Walk_R_00 = 0x001838;
+  constexpr uint24_t Man_Walk_R_00 = 0x0018BA;
   constexpr uint16_t Man_Walk_R_00_width  = 9;
   constexpr uint16_t Man_Walk_R_00_height = 18;
 
-  constexpr uint24_t Man_Walk_R_01 = 0x001857;
+  constexpr uint24_t Man_Walk_R_01 = 0x0018D9;
   constexpr uint16_t Man_Walk_R_01_width  = 9;
   constexpr uint16_t Man_Walk_R_01_height = 18;
 
-  constexpr uint24_t Man_Walk_R_02 = 0x001876;
+  constexpr uint24_t Man_Walk_R_02 = 0x0018F8;
   constexpr uint16_t Man_Walk_R_02_width  = 9;
   constexpr uint16_t Man_Walk_R_02_height = 18;
 
-  constexpr uint24_t Man_Walk_R_03 = 0x001895;
+  constexpr uint24_t Man_Walk_R_03 = 0x001917;
   constexpr uint16_t Man_Walk_R_03_width  = 9;
   constexpr uint16_t Man_Walk_R_03_height = 18;
 
-  constexpr uint24_t Man_Thinking_R = 0x0018B4;
+  constexpr uint24_t Man_Thinking_R = 0x001936;
   constexpr uint16_t Man_Thinking_R_width  = 9;
   constexpr uint16_t Man_Thinking_R_height = 18;
 
-  constexpr uint24_t Man_Thinking_L = 0x0018D3;
+  constexpr uint24_t Man_Thinking_L = 0x001955;
   constexpr uint16_t Man_Thinking_L_width  = 9;
   constexpr uint16_t Man_Thinking_L_height = 18;
 
-  constexpr uint24_t Man_Word_00 = 0x0018F2;
+  constexpr uint24_t Man_Word_00 = 0x001974;
   constexpr uint16_t Man_Word_00_width  = 20;
   constexpr uint16_t Man_Word_00_height = 4;
 
-  constexpr uint24_t Man_Word_01 = 0x00190A;
+  constexpr uint24_t Man_Word_01 = 0x00198C;
   constexpr uint16_t Man_Word_01_width  = 20;
   constexpr uint16_t Man_Word_01_height = 4;
 
-  constexpr uint24_t LightBulb = 0x001922;
+  constexpr uint24_t LightBulb = 0x0019A4;
   constexpr uint16_t LightBulbWidth  = 9;
   constexpr uint16_t LightBulbHeight = 9;
 
@@ -301,17 +318,17 @@ namespace Images
 
 namespace Animation
 {
-  constexpr uint24_t ManData_R = 0x001938;
-  constexpr uint24_t ManData_L = 0x001C44;
+  constexpr uint24_t ManData_R = 0x0019BA;
+  constexpr uint24_t ManData_L = 0x001CC6;
 }
 
 namespace Dictionary
 {
-  constexpr uint24_t English_AlphaMap = 0x001F50;
-  constexpr uint24_t French_AlphaMap = 0x002498;
-  constexpr uint24_t English_Words = 0x0029E0;
-  constexpr uint24_t English_EndOfWordData = 0x006646;
-  constexpr uint24_t French_Words = 0x006646;
-  constexpr uint24_t French_EndOfWordData = 0x00DC2A;
+  constexpr uint24_t English_AlphaMap = 0x001FD2;
+  constexpr uint24_t French_AlphaMap = 0x00251A;
+  constexpr uint24_t English_Words = 0x002A62;
+  constexpr uint24_t English_EndOfWordData = 0x0066C8;
+  constexpr uint24_t French_Words = 0x0066C8;
+  constexpr uint24_t French_EndOfWordData = 0x00DCAC;
 }
 
