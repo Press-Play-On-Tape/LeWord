@@ -184,6 +184,14 @@ CheckState checkWord() {
                 FX::seekData(Dictionary::English_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
+
+
+                // No matching combination?
+
+                if (alphaStart == 0xFFFF) {
+                    return CheckState::InvalidWord;
+                }
+
                 FX::seekData(Dictionary::English_Words + (alphaStart * 6));
 
             }
@@ -195,6 +203,14 @@ CheckState checkWord() {
                 FX::seekData(Dictionary::French_AlphaMap + (startPos * 2));
                 uint16_t alphaStart = FX::readPendingUInt16();
                 FX::readEnd();
+
+
+                // No matching combination?
+
+                if (alphaStart == 0xFFFF) {
+                    return CheckState::InvalidWord;
+                }
+
                 FX::seekData(Dictionary::French_Words + (alphaStart * 6));
 
             }
